@@ -1,0 +1,721 @@
+
+// Variables
+$color-primary: #7bc5c1;
+$color-accent: #eab875;
+$color-logo: #333;
+$color-text-dark: #333;
+$color-text-medium: #555;
+$color-gray: #979797;
+$font-size-logo-desktop: 2.8rem;
+$font-size-logo-mobile: 2rem;
+
+// Info Bar
+.info-bar {
+  background-color: $color-primary;
+
+  .bi {
+    font-size: 1rem;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .text-white {
+    color: white;
+  }
+}
+
+// Top Bar
+.top-bar {
+  .bi-sun-fill {
+    color: $color-accent;
+  }
+
+  .dropdown {
+    font-size: 0.9rem;
+
+    .dropdown-toggle {
+      align-items: center;
+      background: none;
+      border: none;
+      display: flex;
+      gap: 0.3rem;
+    }
+  }
+
+  .fab {
+    margin-right: 0.5rem;
+  }
+
+  a {
+    font-size: 1rem;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+// Separator
+.separator {
+  background: rgba(0, 0, 0, 0.1);
+  height: 1px;
+  margin: 0.5rem auto;
+  max-width: 1140px;
+}
+
+// Main Navbar
+.main-navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 0;
+
+  .logo {
+    max-width: 300px;
+    padding-left: 2vw;
+  }
+
+  .logo-placeholder {
+    color: $color-logo;
+    font-size: $font-size-logo-desktop;
+    font-weight: bold;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .navbar-nav {
+    gap: 0.25rem;
+
+    .nav-link {
+      color: $color-text-dark;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+
+  .navbar-toggler {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .main-navbar {
+    .navbar-nav {
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .logo-placeholder {
+      order: 0;
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .main-navbar {
+    position: relative;
+
+    .logo-placeholder {
+      display: block;
+      font-size: $font-size-logo-mobile;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .navbar-collapse {
+      padding-top: 3rem;
+    }
+
+    .navbar-toggler {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      z-index: 10;
+    }
+  }
+}
+
+// Hero Section
+.hero-section {
+  background-image: url("../images/hotel-bg-img.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  height: 60vh;
+  position: relative;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  &::before {
+    background: linear-gradient(
+      to bottom,
+      rgba($color-primary, 0.63) 0%,
+      rgba($color-primary, 0.31) 70%,
+      rgba(0, 0, 0, 0.57) 100%
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .container {
+    z-index: 2;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    opacity: 0.9;
+  }
+}
+
+// Info Feature Section
+.info-feature-section {
+  background-image: url("../images/waves-bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  height: 80vh;
+
+  .feature-content {
+    background-color: transparent;
+    color: $color-text-dark;
+    display: flex;
+    flex: 1.5;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+
+    .fas {
+      color: $color-primary;
+      font-size: 1.5rem;
+    }
+
+    .feature-description {
+      color: $color-text-medium;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .feature-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      width: 70%;
+    }
+
+    .features-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 2rem;
+
+      .feature-item {
+        align-items: center;
+        display: flex;
+        gap: 0.5rem;
+
+        i {
+          color: $color-primary;
+          font-size: 1.2rem;
+        }
+
+        span {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    button {
+      background-color: transparent;
+      border: 2px solid $color-accent;
+      border-radius: 20px;
+      color: $color-accent;
+      font-weight: 500;
+      padding: 0.5rem 1.5rem;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: rgba($color-accent, 0.1);
+      }
+    }
+  }
+
+  .feature-image {
+    align-items: center;
+    background-color: transparent;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+
+    img {
+      height: auto;
+      max-width: 60%;
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .info-feature-section {
+    flex-direction: column;
+    height: auto;
+
+    .feature-content,
+    .feature-image {
+      padding: 2rem 1rem;
+    }
+  }
+}
+
+// Rooms Section
+.rooms-section {
+  padding: 3rem 0;
+  width: 100%;
+
+  .bg-light-gray {
+    background-color: #fafafa;
+  }
+
+  .room-card {
+    min-height: 100%;
+    padding: 2rem;
+
+    .description {
+      color: $color-text-dark;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    .features-list {
+      margin-top: 1rem;
+
+      li {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+      }
+    }
+
+    .highlight {
+      color: $color-accent;
+      font-weight: 600;
+    }
+
+    .room-buttons {
+      .btn {
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        width: 50%;
+
+        &.btn-outline-black {
+          background-color: #fff;
+          border: 1px solid #000;
+          color: #000;
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+        }
+
+        &.btn-yellow {
+          background-color: $color-accent;
+          border: none;
+          color: #fff;
+
+          &:hover {
+            background-color: darken($color-accent, 8%);
+          }
+        }
+      }
+    }
+
+    .separator-line {
+      background-color: rgba(0, 0, 0, 0.488);
+      height: 2px;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    .subtitle {
+      color: $color-primary;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .row {
+    margin: 0;
+  }
+}
+
+// Rooms Inner Section
+#rooms-inners-section {
+  min-height: 50vh;
+  padding: 60px 0;
+
+  .room-details {
+    align-items: center;
+    display: flex;
+    margin-bottom: 40px;
+
+    .content-column {
+      padding: 20px;
+
+      .reserve-button {
+        background-color: $color-accent;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        padding: 12px 24px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($color-accent, 8%);
+        }
+      }
+
+      .room-description {
+        color: $color-text-medium;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .room-price {
+        color: #222;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .room-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+    }
+
+    .image-column {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      .room-image {
+        border-radius: 12px;
+        height: auto;
+        max-width: 100%;
+      }
+    }
+  }
+
+  .room-features-row {
+    background-image: url("../images/waves-bg.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 40px 20px;
+
+    .room-features {
+      display: flex;
+      justify-content: center;
+
+      .feature-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: center;
+
+        .feature-item {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+
+          i {
+            color: $color-text-dark;
+            font-size: 24px;
+            margin-bottom: 6px;
+          }
+
+          span {
+            color: $color-text-dark;
+            font-size: 0.95rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Divider Line with Text
+.room-divider {
+  align-items: center;
+  display: flex;
+  margin: 60px 0 30px;
+  text-align: center;
+
+  &::before,
+  &::after {
+    background-color: #ccc;
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+  }
+
+  span {
+    color: #444;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0 20px;
+    text-transform: uppercase;
+  }
+}
+
+// More Rooms Layout
+.more-rooms {
+  margin-bottom: 60px;
+
+  .room-card {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    margin: 10px 0;
+    padding: 20px;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .room-card-content {
+      flex-grow: 1;
+
+      .room-card-button {
+        background-color: $color-accent;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        padding: 10px 20px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($color-accent, 8%);
+        }
+      }
+
+      .room-card-description {
+        color: $color-text-medium;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+      }
+
+      .room-card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+    }
+
+    .room-card-image-wrapper {
+      flex-shrink: 0;
+      margin-right: 20px;
+
+      .room-card-image {
+        border-radius: 8px;
+        height: auto;
+        width: 180px;
+      }
+    }
+  }
+}
+
+// Carousel
+.carousel-section {
+  background-image: url("../images/waves-bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  .carousel-arrows {
+    float: right;
+    margin: -70px 0;
+    width: 7%;
+  }
+
+  .carousel-card {
+    border-radius: 12px;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+    margin: 60px 30px;
+    width: 700px;
+  }
+
+  .carousel-controls-wrapper {
+    width: 10%;
+  }
+
+  .carousel-scroll-wrapper {
+    overflow-x: hidden !important;
+    scroll-behavior: smooth;
+  }
+}
+
+.reveiws-text {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+#customMap {
+  height: 70vh;
+  position: relative;
+}
+
+// Form
+form {
+  .btn-primary {
+    background-color: $color-primary;
+    border-color: $color-primary;
+
+    &:hover {
+      background-color: darken($color-primary, 5%);
+      border-color: darken($color-primary, 5%);
+    }
+  }
+
+  .form-control {
+    border-radius: 0.5rem;
+  }
+
+  label {
+    font-weight: 500;
+  }
+}
+
+// Landmarks
+.landmarks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+
+  .landmark {
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 calc(33.333% - 1rem);
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin: 1rem 0 0.5rem;
+    }
+
+    img {
+      border-radius: 6px;
+      height: 180px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    p {
+      color: $color-text-medium;
+      font-size: 0.95rem;
+      margin-top: auto;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .landmarks .landmark {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .landmarks .landmark {
+    flex: 1 1 100%;
+  }
+}
+
+// Footer
+footer {
+  background:
+    linear-gradient(rgba($color-primary, 0.8), rgba(93, 169, 165, 1)),
+    url("../images/footer-img.jpg");
+  background-position: center;
+  background-size: cover;
+  border-top: 6px solid #ffc107;
+
+  .text-white a {
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Buttons
+.btn-yellow {
+  background-color: $color-accent;
+  border: none;
+  color: #fff;
+
+  &:hover {
+    background-color: darken($color-accent, 8%);
+  }
+}
+
+.grey-button {
+  background-color: $color-gray;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  padding: 12px 24px;
+  transition: background-color 0.3s;
+}

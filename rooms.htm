@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Website</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+ <!-- Top Info Bar -->
+<div class="info-bar py-2">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+      <div class="d-flex align-items-center gap-3 text-white small">
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-envelope"></i> info@hotelchris.com
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-telephone"></i> +359 88 9682925
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-geo-alt"></i> Bulgaria, Sveti Vlas
+        </div>
+      </div>
+      <div class="text-white small d-flex align-items-center gap-2">
+        <span><i class="bi bi-star-fill text-warning"></i> 4.9 (230 Google Reviews)</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Weather & Social Row -->
+  <div class="top-bar py-2">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+      <div class="d-flex flex-column">
+        <span class="text-muted small">Времето в Свети Влас:</span>
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-sun" style="color: #EAB875;"></i>
+          <span>no information</span>
+        </div>
+      </div>
+          <div class="d-flex align-items-center gap-3">
+            <!-- Social Icons -->
+            <a href="#" class="text-dark"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+          
+            <!-- Language Dropdown -->
+            <div class="dropdown border rounded-pill px-2 py-1">
+              <a class="dropdown-toggle text-dark text-decoration-none small" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="bi bi-globe"></i> EN
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">EN</a></li>
+                <li><a class="dropdown-item" href="#">FR</a></li>
+              </ul>
+            </div>
+          </div>          
+    </div>
+  </div>
+  
+  <!-- Separator Line -->
+  <div class="separator container"></div>
+  
+  <!-- Main Navigation -->
+  <nav class="main-navbar navbar navbar-expand-lg">
+    <div class="container d-flex align-items-center justify-content-between position-relative">
+  
+      <!-- Logo (visible on mobile and desktop) -->
+      <a class="navbar-brand logo-placeholder d-lg-none" href="#"><img class="logo" src="assets/images/logo.png" alt=""></a>
+  
+      <!-- Nav Items -->
+      <div class="collapse navbar-collapse justify-content-center" id="mainNav">
+        <ul class="navbar-nav align-items-center flex-wrap">
+            <li class="nav-item"><a class="nav-link" href="#">ЗА ХОТЕЛА</a></li>
+          
+            <!-- Dropdown Item -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                НАСТАНЯВАНЕ
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                <li><a class="dropdown-item" href="#">ДВОЙНА СТАЯ</a></li>
+                <li><a class="dropdown-item" href="#">СТУДИО</a></li>
+                <li><a class="dropdown-item" href="#">АПАРТАМЕНТ</a></li>
+              </ul>
+            </li>
+          
+            <li class="nav-item"><a class="nav-link" href="#">УСЛУГИ</a></li>
+          
+            <!-- Logo in the center (desktop only) -->
+            <li class="nav-item d-none d-lg-block">
+              <a class="navbar-brand logo-placeholder" href="#"><img class="logo" src="assets/images/logo.png" alt=""></a>
+            </li>
+          
+            <li class="nav-item"><a class="nav-link" href="#">РЕЗЕРВАЦИИ</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">ЗАБЕЛЕЖИТЕЛНОСТИ</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">КОНТАКТ</a></li>
+          </ul>
+          
+      </div>
+  
+      <!-- Toggler on the right -->
+      <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+
+
+
+  <div class="">
+    <div id="quendoo-bcw"></div>
+  </div>
+  
+
+
+<!-- ROOMS SECTION-->
+<div id="rooms-inners-section">
+  <div class="container">
+    <div class="row room-details">
+      <div class="col-md-6 image-column">
+        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-image" />
+      </div>
+      <div class="col-md-6 content-column">
+        <h2 class="room-title">Двойна стая</h2>
+        <p class="room-description">
+Семеен хотел Крис разполага с 11 двойни стаи, като 6 двойни стаи разполагат с допълнително легло. Уютните двойни стаи в семеен хотел Крис са  обзаведени в топли цветове, които създават спокойна и приветлива атмосфера. Разполагат със слънчева тераса с красив изглед към морето или планината.
+        </p>
+        <button class="grey-button">Цени</button>
+        <button class="reserve-button">Резервирай</button>
+      </div>
+    </div>
+
+    <div class="row room-features-row">
+      <div class="col room-features">
+        <div class="feature-list">
+          <div class="feature-item">
+            <i class="fas fa-wifi"></i>
+            <span>Безплатен Wi-Fi</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-tv"></i>
+            <span>Смарт Телевизор</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-snowflake"></i>
+            <span>Климатик</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-bath"></i>
+            <span>Самостоятелна баня</span>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-door-open"></i>
+            <span>Хладилник</span>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-lines-leaning"></i>
+            <span>Гардероб</span>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-memory"></i>
+            <span>Тераса</span>
+          </div>
+          <!-- Add more feature items as needed -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Separator -->
+<div class="room-divider">
+  <span>Другите ни стаи</span>
+</div>
+
+<!-- Additional Rooms -->
+<div class="row more-rooms">
+  <div class="col-md-6">
+    <div class="room-card">
+      <div class="room-card-image-wrapper">
+        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-card-image" />
+      </div>
+      <div class="room-card-content">
+        <h3 class="room-card-title">Апартементи</h3>
+        <p class="room-card-description">
+          2 самостоятелни стаи за настаняване и тераса към всяка стая. Подходящи най-вече за семейства.
+        </p>
+        <button class="room-card-button">Виж още</button>
+      </div>
+    </div>
+    
+  </div>
+  <div class="col-md-6">
+    <div class="room-card">
+      <div class="room-card-image-wrapper">
+        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-card-image" />
+      </div>
+      <div class="room-card-content">
+        <h3 class="room-card-title">Студия</h3>
+        <p class="room-card-description">
+          Студиото е по-просторно и по-конфортно от двойната стая. Подходящо е за двама човека или семейства с едно или две деца.
+        </p>
+        <button class="room-card-button">Виж още</button>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+
+
+<!-- Footer -->
+<footer class="text-white">
+  <div class="container py-5">
+    <div class="row">
+      <!-- Company Info -->
+      <div class="col-md-4 mb-4">
+        <img class="logo" src="assets/images/logo-white.png" alt="" style="width: 200px;">
+        <p>We provide high-quality services and innovative solutions to meet your needs.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+          <li><a href="#" class="text-white text-decoration-none">About</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Services</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">Resources</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white text-decoration-none">Blog</a></li>
+          <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Support</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-4 mb-4">
+        <h6 class="fw-bold">Контакт с Хотела</h6>
+        <p>имейл: info@hotelchris.com</p>
+        <p>Телефон: +359 88 9682925</p>
+        <p>Адрес: ул. „Хан Крум“ 5, 8256 Свети Влас</p>
+      </div>
+    </div>
+
+    <div class="text-center pt-3 border-top border-light mt-4">
+      <small>&copy; 2025 Your Company. All rights reserved.</small>
+    </div>
+  </div>
+</footer>
+
+
+
+
+  
+  
+   <!-- Bootstrap JS (optional for interactivity later) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="assets/js/script.js"></script>
+
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdyGbeCSZC1gsTDybBb7KEHT9efWzjC6o&callback=initMap"></script>
+</body>
+</html>

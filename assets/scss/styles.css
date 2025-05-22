@@ -1,0 +1,341 @@
+.info-bar {
+  background-color: #7bc5c1;
+}
+.info-bar .bi {
+  font-size: 1rem;
+}
+.info-bar .text-white {
+  color: white !important;
+}
+.info-bar a {
+  color: white;
+  text-decoration: none;
+}
+.info-bar a:hover {
+  text-decoration: underline;
+}
+
+.top-bar .bi-sun-fill {
+  color: #EAB875;
+}
+.top-bar a {
+  font-size: 1rem;
+}
+.top-bar a:hover {
+  color: #000;
+}
+.top-bar .fab {
+  margin-right: 0.5rem;
+}
+.top-bar .dropdown {
+  font-size: 0.9rem;
+}
+.top-bar .dropdown .dropdown-toggle {
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.separator {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 0.5rem auto;
+  max-width: 1140px;
+}
+
+.main-navbar {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.main-navbar .navbar-toggler {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+}
+.main-navbar .navbar-nav {
+  gap: 2rem;
+}
+.main-navbar .navbar-nav .nav-link {
+  color: #333;
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.5rem 0;
+}
+.main-navbar .navbar-nav .nav-link:hover {
+  color: #000;
+}
+.main-navbar .logo-placeholder {
+  font-weight: bold;
+  text-decoration: none;
+  line-height: 1;
+  color: #333;
+  font-size: 2.8rem;
+}
+
+@media (min-width: 992px) {
+  .main-navbar .navbar-nav {
+    flex-direction: row;
+    align-items: center;
+  }
+  .main-navbar .logo-placeholder {
+    order: 0;
+  }
+}
+@media (max-width: 991.98px) {
+  .main-navbar {
+    position: relative;
+  }
+  .main-navbar .navbar-toggler {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transform: none;
+    z-index: 10;
+  }
+  .main-navbar .navbar-collapse {
+    padding-top: 3rem;
+  }
+  .main-navbar .logo-placeholder {
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    font-size: 2rem;
+  }
+}
+.hero-section {
+  height: 60vh;
+  background-image: url("../images/hotel-bg-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+.hero-section .container {
+  z-index: 2;
+}
+.hero-section .hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.hero-section .hero-subtitle {
+  font-size: 1.5rem;
+  opacity: 0.9;
+}
+
+.info-feature-section {
+  height: 100vh;
+  display: flex;
+  background-image: url("../images/waves-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.info-feature-section .feature-image {
+  flex: 1;
+  background-color: transparent;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.info-feature-section .feature-image img {
+  max-width: 60%;
+  height: auto;
+}
+.info-feature-section .feature-content {
+  flex: 1;
+  background-color: transparent;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+.info-feature-section .feature-content .fas {
+  color: #7bc5c1 !important;
+}
+.info-feature-section .feature-content .feature-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+.info-feature-section .feature-content .feature-description {
+  font-size: 1rem;
+  color: #555;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+.info-feature-section .feature-content .features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.info-feature-section .feature-content .features-grid .feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.info-feature-section .feature-content .features-grid .feature-item i {
+  color: #7bc5c1;
+  font-size: 1.2rem;
+}
+.info-feature-section .feature-content .features-grid .feature-item span {
+  font-size: 0.9rem;
+}
+.info-feature-section .feature-content button {
+  background-color: transparent;
+  border: 2px solid #EAB875;
+  color: #EAB875;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+.info-feature-section .feature-content button:hover {
+  background-color: rgba(234, 184, 117, 0.1);
+}
+
+@media (max-width: 991.98px) {
+  .info-feature-section {
+    flex-direction: column;
+    height: auto;
+  }
+  .info-feature-section .feature-image,
+  .info-feature-section .feature-content {
+    padding: 2rem 1rem;
+  }
+}
+.rooms-section {
+  width: 100%;
+  padding: 3rem 0;
+}
+.rooms-section .row {
+  margin: 0;
+}
+.rooms-section .room-card {
+  min-height: 100%;
+  padding: 2rem;
+}
+.rooms-section .room-card .subtitle {
+  color: #7bc5c1;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.rooms-section .room-card .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.rooms-section .room-card .separator-line {
+  height: 2px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.488);
+  margin-bottom: 1rem;
+}
+.rooms-section .room-card .highlight {
+  color: #EAB875;
+  font-weight: 600;
+}
+.rooms-section .room-card .description {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+.rooms-section .room-card .features-list {
+  margin-top: 1rem;
+}
+.rooms-section .room-card .features-list li {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+.rooms-section .room-card .room-buttons .btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  width: 50%;
+}
+.rooms-section .room-card .room-buttons .btn.btn-yellow {
+  background-color: #EAB875;
+  color: #fff;
+  border: none;
+}
+.rooms-section .room-card .room-buttons .btn.btn-yellow:hover {
+  background-color: #e5a652;
+}
+.rooms-section .room-card .room-buttons .btn.btn-outline-black {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+.rooms-section .room-card .room-buttons .btn.btn-outline-black:hover {
+  background-color: #f0f0f0;
+}
+.rooms-section .bg-light-gray {
+  background-color: #fafafa;
+}
+
+.carousel-section {
+  background-image: url("../images/waves-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.carousel-section .carousel-controls-wrapper {
+  width: 10%;
+}
+.carousel-section .carousel-card {
+  border-radius: 12px;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+  margin: 0 30px;
+  width: 700px;
+}
+.carousel-section .carousel-scroll-wrapper {
+  scroll-behavior: smooth;
+  overflow-x: hidden !important;
+}
+
+#customMap {
+  position: relative;
+  height: 70vh;
+}
+
+form label {
+  font-weight: 500;
+}
+form .form-control {
+  border-radius: 0.5rem;
+}
+form .btn-primary {
+  background-color: #7bc5c1;
+  border-color: #7bc5c1;
+}
+form .btn-primary:hover {
+  background-color: #69bdb9;
+  border-color: #69bdb9;
+}
+
+footer {
+  background-color: #7bc5c1;
+  border-top: 6px solid #ffc107;
+}
+footer .text-white a {
+  color: white;
+  text-decoration: none;
+}
+footer .text-white a:hover {
+  text-decoration: underline;
+}/*# sourceMappingURL=styles.css.map */
