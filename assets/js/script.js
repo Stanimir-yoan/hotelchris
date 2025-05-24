@@ -175,3 +175,16 @@ document.getElementById('scrollLeft').addEventListener('click', () => {
 document.getElementById('scrollRight').addEventListener('click', () => {
   container.scrollBy({ left: 320, behavior: 'smooth' });
 });
+
+
+//LANGUAGE
+window.gtranslateSettings = {"default_language":"bg","languages":["bg","ro","en","uk","ru","de","pl","sr","mk","hu"],"wrapper_selector":".gtranslate_wrapper","flag-size":48}
+
+
+//SCROLL TO DIV
+function scrollToDiv() {
+  const target = document.getElementById('targetDiv');
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
+}

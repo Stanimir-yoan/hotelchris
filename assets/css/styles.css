@@ -457,8 +457,10 @@
 }
 .carousel-section .carousel-arrows {
   float: right;
-  margin: -70px 0;
+  margin: -70px 40px;
   width: 7%;
+  position: relative;
+  z-index: 99;
 }
 .carousel-section .carousel-card {
   border-radius: 12px;
@@ -580,3 +582,15 @@ footer .text-white a:hover {
   padding: 12px 24px;
   transition: background-color 0.3s;
 }/*# sourceMappingURL=styles.css.map */
+
+a.glink{
+  display: block;
+}
+a.glink::after{
+  margin-top: 10px;
+}
+.langs-list{
+  width: 70px !important;
+  min-width: 0px !important;
+  text-align: center !important;
+}

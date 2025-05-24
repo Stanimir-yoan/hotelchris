@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.3.2/css/flag-icons.min.css">
 
+
 </head>
 <body>
  <!-- Top Info Bar -->
@@ -52,11 +53,17 @@
             <!-- Language Dropdown -->
             <div class="dropdown border rounded-pill px-2 py-1">
               <a class="dropdown-toggle text-dark text-decoration-none small" href="#" role="button" data-bs-toggle="dropdown">
-                <i class="bi bi-globe"></i> EN
+                <i class="bi bi-globe"></i> BG
               </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">EN</a></li>
-                <li><a class="dropdown-item" href="#">FR</a></li>
+              <ul class="dropdown-menu langs-list">
+                <div class="gtranslate_wrapper"></div>
+                <!-- <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru me-2"></span><span class="fi fi-bg"></span> Bulgarian</a></li>
+<li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru me-2"></span><span class="fi fi-gb"></span> English</a></li>
+<li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-pl"></span> Polish</a></li>
+<li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-gr"></span> Greek</a></li>
+<li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-ro"></span> Romanian</a></li>
+ -->
+
               </ul>
             </div>
           </div>          
@@ -120,100 +127,23 @@
   
 
 
-<!-- ROOMS SECTION-->
-<div id="rooms-inners-section">
+<!-- ABOUT SECTION-->
+<div id="about" class="p-5" style="background-image: url('assets/images/waves-anchor-bg.jpg');background-size: cover;background-position: center center;">
   <div class="container">
-    <div class="row room-details">
-      <div class="col-md-6 image-column">
-        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-image" />
-      </div>
-      <div class="col-md-6 content-column">
-        <h2 class="room-title">Двойна стая</h2>
-        <p class="room-description">
-Семеен хотел Крис разполага с 11 двойни стаи, като 6 двойни стаи разполагат с допълнително легло. Уютните двойни стаи в семеен хотел Крис са  обзаведени в топли цветове, които създават спокойна и приветлива атмосфера. Разполагат със слънчева тераса с красив изглед към морето или планината.
-        </p>
-        <button class="grey-button">Цени</button>
-        <button class="reserve-button">Резервирай</button>
+    <div class="row">
+      <div class="col-9 mx-auto text-center">
+        <h3 class="mb-3">Кратко описание на нашия хотел</h3>
+        <p> Семеен хотел Крис, един от многото хотели в Свети Влас, се намира в центъра на курортното селище Свети Влас на 10 минути от плажната ивица.
+          Хотел Крис Ви предлага 11 двойни стаи, 5 апартаменти, 4 студия, открит басейн, бар,  ресторант, сауна,  детски кът, безжичен интернет (Wi-Fi)  и място за паркиране за вашата приятна почивка. 
+            Във всички стаи предоставяме на нашите гости уют, модерно обзавеждане и оборудване за една приятна обстановка по време на Вашата почивка. Всички помещения разполагат с двойни или единични легла, климатик, телевизор със сателитни програми, мини бар, термокана, сешоар, баня, сейф и тераса с чудесен изглед към морето.
+          В Двойните стаи има възможност за ползване на допълнително легло.
+          В студията на разположение имате и разтегателен диван, който може да се ползва като допълнително легло.
+          Апартаментите се състоят от 2 самостоятелни стаи и са подходящи за настаняване на семейства.  </p>
       </div>
     </div>
-
-    <div class="row room-features-row">
-      <div class="col room-features">
-        <div class="feature-list">
-          <div class="feature-item">
-            <i class="fas fa-wifi"></i>
-            <span>Безплатен Wi-Fi</span>
-          </div>
-          <div class="feature-item">
-            <i class="fas fa-tv"></i>
-            <span>Смарт Телевизор</span>
-          </div>
-          <div class="feature-item">
-            <i class="fas fa-snowflake"></i>
-            <span>Климатик</span>
-          </div>
-          <div class="feature-item">
-            <i class="fas fa-bath"></i>
-            <span>Самостоятелна баня</span>
-          </div>
-          <div class="feature-item">
-            <i class="fa-solid fa-door-open"></i>
-            <span>Хладилник</span>
-          </div>
-          <div class="feature-item">
-            <i class="fa-solid fa-lines-leaning"></i>
-            <span>Гардероб</span>
-          </div>
-          <div class="feature-item">
-            <i class="fa-solid fa-memory"></i>
-            <span>Тераса</span>
-          </div>
-          <!-- Add more feature items as needed -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Section Separator -->
-<div class="room-divider">
-  <span>Другите ни стаи</span>
-</div>
-
-<!-- Additional Rooms -->
-<div class="row more-rooms">
-  <div class="col-md-6">
-    <div class="room-card">
-      <div class="room-card-image-wrapper">
-        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-card-image" />
-      </div>
-      <div class="room-card-content">
-        <h3 class="room-card-title">Апартементи</h3>
-        <p class="room-card-description">
-          2 самостоятелни стаи за настаняване и тераса към всяка стая. Подходящи най-вече за семейства.
-        </p>
-        <a href="apartments.htm" class="room-card-button">Виж още</a>
-      </div>
-    </div>
-    
-  </div>
-  <div class="col-md-6">
-    <div class="room-card">
-      <div class="room-card-image-wrapper">
-        <img src="assets/images/room-img.jpg" alt="Room Image" class="room-card-image" />
-      </div>
-      <div class="room-card-content">
-        <h3 class="room-card-title">Студия</h3>
-        <p class="room-card-description">
-          Студиото е по-просторно и по-конфортно от двойната стая. Подходящо е за двама човека или семейства с едно или две деца.
-        </p>
-        <a href="studios.htm" class="room-card-button">Виж още</a>
-      </div>
-    </div>
-    
   </div>
 </div>
 
-  </div>
-</div>
 
 
 
@@ -266,11 +196,12 @@
 
 
 
+
   
   
    <!-- Bootstrap JS (optional for interactivity later) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
 <script src="assets/js/script.js"></script>
 
 

@@ -14,6 +14,8 @@
 
 </head>
 <body>
+
+
  <!-- Top Info Bar -->
 <div class="info-bar py-2">
     <div class="container d-flex justify-content-between align-items-center flex-wrap">
@@ -54,13 +56,14 @@
               <a class="dropdown-toggle text-dark text-decoration-none small" href="#" role="button" data-bs-toggle="dropdown">
                 <i class="bi bi-globe"></i> BG
               </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru me-2"></span><span class="fi fi-bg"></span> Bulgarian</a></li>
+              <ul class="dropdown-menu langs-list">
+                <div class="gtranslate_wrapper"></div>
+                <!-- <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru me-2"></span><span class="fi fi-bg"></span> Bulgarian</a></li>
 <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru me-2"></span><span class="fi fi-gb"></span> English</a></li>
 <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-pl"></span> Polish</a></li>
 <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-gr"></span> Greek</a></li>
 <li><a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl me-2"></span><span class="fi fi-ro"></span> Romanian</a></li>
-
+ -->
 
               </ul>
             </div>
@@ -81,7 +84,7 @@
       <!-- Nav Items -->
       <div class="collapse navbar-collapse justify-content-center" id="mainNav">
         <ul class="navbar-nav align-items-center flex-wrap">
-            <li class="nav-item"><a class="nav-link" href="#">ЗА ХОТЕЛА</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.htm">ЗА ХОТЕЛА</a></li>
           
             <!-- Dropdown Item -->
             <li class="nav-item dropdown">
@@ -90,21 +93,21 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
                 <li><a class="dropdown-item" href="rooms.htm">ДВОЙНА СТАЯ</a></li>
-                <li><a class="dropdown-item" href="#">СТУДИО</a></li>
-                <li><a class="dropdown-item" href="#">АПАРТАМЕНТ</a></li>
+                <li><a class="dropdown-item" href="studios.htm">СТУДИО</a></li>
+                <li><a class="dropdown-item" href="apartments.htm">АПАРТАМЕНТ</a></li>
               </ul>
             </li>
           
-            <li class="nav-item"><a class="nav-link" href="#">УСЛУГИ</a></li>
+            <li class="nav-item"><a class="nav-link" href="services.htm">УСЛУГИ</a></li>
           
             <!-- Logo in the center (desktop only) -->
             <li class="nav-item d-none d-lg-block mx-4">
-              <a class="navbar-brand logo-placeholder" href="#"><img class="logo" src="assets/images/logo.png" alt=""></a>
+              <a class="navbar-brand logo-placeholder" href="index.html"><img class="logo" src="assets/images/logo.png" alt=""></a>
             </li>
           
             <li class="nav-item"><a class="nav-link" href="landmarks.htm">ЗАБЕЛЕЖИТЕЛНОСТИ</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">УСЛОВИЯ</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">КОНТАКТ</a></li>
+            <li class="nav-item"><a class="nav-link" href="conditions.htm">УСЛОВИЯ</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.htm">КОНТАКТ</a></li>
           </ul>
           
       </div>
@@ -124,7 +127,7 @@
     </div>
   </section>
 
-  <div class="">
+  <div class="" id="targetDiv">
     <div id="quendoo-bcw"></div>
   </div>
   
@@ -205,8 +208,8 @@
           </ul>
         </div>
         <div class="room-buttons mt-4 d-flex gap-2">
-          <button class="btn btn-yellow text-white">Към Резервации</button>
-          <button class="btn btn-outline-black">Виж Детайли</button>
+          <button class="btn btn-yellow text-white" onclick="scrollToDiv()">Към Резервации</button>
+          <a href="studios.htm" class="btn btn-outline-black">Виж Детайли</a>
         </div>
       </div>
     </div>
@@ -236,8 +239,8 @@
           </ul>
         </div>
         <div class="room-buttons mt-4 d-flex gap-2">
-          <button class="btn btn-yellow text-white">Към Резервации</button>
-          <button class="btn btn-outline-black">Виж Детайли</button>
+          <button class="btn btn-yellow text-white" onclick="scrollToDiv()">Към Резервации</button>
+          <a href="rooms.htm" class="btn btn-outline-black">Виж Детайли</a>
         </div>
       </div>
     </div>
@@ -268,8 +271,8 @@
           </ul>
         </div>
         <div class="room-buttons mt-4 d-flex gap-2">
-          <button class="btn btn-yellow text-white">Към Резервации</button>
-          <button class="btn btn-outline-black">Виж Детайли</button>
+          <button class="btn btn-yellow text-white" onclick="scrollToDiv()">Към Резервации</button>
+          <a href="apartments.htm" class="btn btn-outline-black">Виж Детайли</a>
         </div>
       </div>
     </div>
@@ -387,6 +390,7 @@
   
    <!-- Bootstrap JS (optional for interactivity later) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
 
 <script src="assets/js/script.js"></script>
 
