@@ -122,39 +122,128 @@
 <!-- ABOUT SECTION-->
 <div id="about" class="p-5" style="background-image: url('assets/images/waves-anchor-bg.jpg');background-size: cover;background-position: center center;">
    <!-- Container for Map and Form -->
-<div class="container-fluid mt-5">
+<div class="container mt-5">
   <div class="row align-items-stretch vh-70">
   
-    <!-- Map Section (Vertically Centered) -->
-    <div class="col-md-6 p-0 d-flex align-items-center justify-content-center">
-      <div id="customMap" class="rounded-4 shadow-sm" style="width: 100%; height: 100%;"></div>
+   <div class="col-md-5">
+      <section class="contact-info">
+  <div class="container">
+
+    <div class="info-block">
+      <h3 class="info-title">
+        <span class="icon"><i class="fa-solid fa-phone"></i></span>
+        Телефон
+      </h3>
+      <p class="info-text">+359 889 682 925</p>
     </div>
-  
+
+    <div class="info-block">
+      <h3 class="info-title">
+        <span class="icon"><i class="fa-solid fa-envelope-open"></i></span>
+        E-mail
+      </h3>
+      <p class="info-text">info@hotelchris.com</p>
+    </div>
+
+    <div class="info-block">
+      <h3 class="info-title">
+        <span class="icon"><i class="fa-solid fa-map-location-dot"></i></span>
+        Адрес
+      </h3>
+      <p class="info-text">
+        Гр.Свети Влас,<br>
+        ул.Хан Крум 5<br>
+      </p>
+    </div>
+
+    <div class="info-block">
+      <h3 class="info-title">
+        <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        Работно време на рецепцията
+      </h3>
+      <p class="info-text">от 8:00 до 22:00</p>
+    </div>
+
+    <div class="info-block">
+      <h3 class="info-title">
+        <span class="icon"><i class="fa-solid fa-building-columns"></i></span>
+        Банкова сметка за преводи и депозити
+      </h3>
+
+      <div class="bank-details">
+        <p><strong>Получател:</strong> Кристиян 67 ЕООД</p>
+        <p><strong>IBAN:</strong> BG69 UBBS 8155 1076 6107 18</p>
+        <p><strong>BIC/SWIFT:</strong> UBBSBGSF</p>
+        <p><strong>Име на банка:</strong> ОББ БАНК</p>
+        <p>
+          <strong>Основание за плащане:</strong>
+          Името, на което е направена резервацията и
+          <strong>датите</strong> на настаняване
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+   </div>
     <!-- Form Section (Vertically Centered) -->
-    <div class="col-md-6 d-flex align-items-center justify-content-center">
-      <div class="w-100" style="max-width: 500px;">
+    <div class="col-md-7">
+    <div class="contact-form-wrapper">
+<div class="w-100 mx-auto">
         <h4 class="fw-bold mb-3">Свържете с нас</h4>
         <form>
-          <div class="mb-3">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-5">
             <label for="name" class="form-label">Име</label>
             <input type="text" class="form-control" id="name" placeholder="Имената Ви...">
           </div>
-          <div class="mb-3">
+          <div class="mb-5">
             <label for="email" class="form-label">Имейл</label>
             <input type="email" class="form-control" id="email" placeholder="Твоят имейл...">
           </div>
-          <div class="mb-3">
+            </div>
+            <div class="col-md-6">
+              <div class="mb-5">
+            <label for="name" class="form-label">Име</label>
+            <input type="text" class="form-control" id="name" placeholder="Имената Ви...">
+          </div>
+          <div class="mb-5">
+            <label for="email" class="form-label">Имейл</label>
+            <input type="email" class="form-control" id="email" placeholder="Твоят имейл...">
+          </div>
+            </div>
+          </div>
+          
+          <div class="mb-5">
             <label for="message" class="form-label">Съобщение</label>
             <textarea class="form-control" id="message" rows="4" placeholder="Твоето съобщение..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">Изпрати</button>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              Прочетох и приемам <a href="#">Политиката за поверителност</a>
+            </label>
+           </div>
+
+          <button type="submit" class="btn p-5 pb-3 pt-3 m-3">Изпрати</button>
         </form>
       </div>
+    </div>
+      
     </div>
   
   </div>
 
-  <h3 class="mb-3 mt-5 text-center">Как да ни намерите:</h3>
+  <div class="row p-5">
+   <!-- Map Section (Vertically Centered) -->
+    <div class="col-12-0 d-flex align-items-center justify-content-center">
+      <div id="customMap" class="rounded-4 shadow-sm w-100"></div>
+    </div>
+</div>
+
+  <!-- <h3 class="mb-3 mt-5 text-center">Как да ни намерите:</h3>
 
   <div class="row">
     <div class="col-md-6">
@@ -173,8 +262,10 @@
   </p>
       </div>
           </div>
-  </div>
+  </div> -->
 </div>
+
+
 
 </div>
 

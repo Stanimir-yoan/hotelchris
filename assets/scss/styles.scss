@@ -5,6 +5,8 @@ $color-accent: #eab875;
 $color-logo: #333;
 $color-text-dark: #333;
 $color-text-medium: #555;
+$color-light-beige: #ede9e6;
+$color-darker-beige: #ede9e6;
 $color-gray: #979797;
 $font-size-logo-desktop: 2.8rem;
 $font-size-logo-mobile: 2rem;
@@ -600,8 +602,75 @@ $font-size-logo-mobile: 2rem;
 }
 
 #customMap {
-  height: 70vh;
+  height: 300px;
   position: relative;
+}
+
+//contact INFO
+.contact-form-wrapper{
+  background-color: $color-light-beige;
+  box-shadow: 6px 8px 1px #ded9d6;
+  padding: 5%;
+  button{
+    border-radius: 0;
+    background-color: $color-accent !important;
+  }
+}
+.contact-info {
+  padding: 60px 20px;
+  font-family: "Georgia", serif;
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .info-block {
+    margin-bottom: 40px;
+  }
+
+  .info-title {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 500;
+    color: $color-accent;
+    margin-bottom: 15px;
+
+    .icon {
+      margin-right: 12px;
+      font-size: 22px;
+    }
+  }
+
+  .info-text {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    color: $color-text-dark;
+    line-height: 1.6;
+  }
+
+  .bank-details {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    color: $color-text-dark;
+    line-height: 1.7;
+
+    p {
+      margin-bottom: 8px;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .notice {
+    margin-top: 20px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    color: $color-gray;
+  }
 }
 
 // Form
@@ -617,7 +686,15 @@ form {
   }
 
   .form-control {
-    border-radius: 0.5rem;
+    background: $color-darker-beige;
+    border-bottom: 1px solid #949494;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    &:focus{
+      background-color: $color-darker-beige;
+    }
   }
 
   label {

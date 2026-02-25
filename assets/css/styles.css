@@ -219,7 +219,7 @@
     height: auto;
   }
   .info-feature-section .feature-content,
-.info-feature-section .feature-image {
+  .info-feature-section .feature-image {
     padding: 2rem 1rem;
   }
 }
@@ -271,7 +271,7 @@
   color: #fff;
 }
 .rooms-section .room-card .room-buttons .btn.btn-yellow:hover {
-  background-color: #e5a652;
+  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
 }
 .rooms-section .room-card .separator-line {
   background-color: rgba(0, 0, 0, 0.488);
@@ -315,7 +315,7 @@
   transition: background-color 0.3s;
 }
 #rooms-inners-section .room-details .content-column .reserve-button:hover {
-  background-color: #e5a652;
+  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
 }
 #rooms-inners-section .room-details .content-column .room-description {
   color: #555;
@@ -427,7 +427,7 @@
   transition: background-color 0.3s;
 }
 .more-rooms .room-card .room-card-content .room-card-button:hover {
-  background-color: #e5a652;
+  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
 }
 .more-rooms .room-card .room-card-content .room-card-description {
   color: #555;
@@ -457,10 +457,8 @@
 }
 .carousel-section .carousel-arrows {
   float: right;
-  margin: -70px 40px;
+  margin: -70px 0;
   width: 7%;
-  position: relative;
-  z-index: 99;
 }
 .carousel-section .carousel-card {
   border-radius: 12px;
@@ -484,8 +482,66 @@
 }
 
 #customMap {
-  height: 70vh;
+  height: 300px;
   position: relative;
+}
+
+.contact-form-wrapper {
+  background-color: #ede9e6;
+  box-shadow: 6px 8px 1px #ded9d6;
+  padding: 5%;
+}
+.contact-form-wrapper button {
+  border-radius: 0;
+  background-color: #eab875 !important;
+}
+
+.contact-info {
+  padding: 60px 20px;
+  font-family: "Georgia", serif;
+}
+.contact-info .container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.contact-info .info-block {
+  margin-bottom: 40px;
+}
+.contact-info .info-title {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #eab875;
+  margin-bottom: 15px;
+}
+.contact-info .info-title .icon {
+  margin-right: 12px;
+  font-size: 22px;
+}
+.contact-info .info-text {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  color: #333;
+  line-height: 1.6;
+}
+.contact-info .bank-details {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  color: #333;
+  line-height: 1.7;
+}
+.contact-info .bank-details p {
+  margin-bottom: 8px;
+}
+.contact-info .bank-details p strong {
+  font-weight: 600;
+}
+.contact-info .notice {
+  margin-top: 20px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  color: #979797;
 }
 
 form .btn-primary {
@@ -493,11 +549,19 @@ form .btn-primary {
   border-color: #7bc5c1;
 }
 form .btn-primary:hover {
-  background-color: #69bdb9;
-  border-color: #69bdb9;
+  background-color: rgb(105.2842105263, 189.2157894737, 184.6789473684);
+  border-color: rgb(105.2842105263, 189.2157894737, 184.6789473684);
 }
 form .form-control {
-  border-radius: 0.5rem;
+  background: #ede9e6;
+  border-bottom: 1px solid #949494;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+form .form-control:focus {
+  background-color: #ede9e6;
 }
 form label {
   font-weight: 500;
@@ -531,7 +595,8 @@ form label {
 .landmarks .landmark img {
   border-radius: 6px;
   height: 180px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   width: 100%;
 }
 .landmarks .landmark p {
@@ -570,7 +635,7 @@ footer .text-white a:hover {
   color: #fff;
 }
 .btn-yellow:hover {
-  background-color: #e5a652;
+  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
 }
 
 .grey-button {
@@ -582,15 +647,3 @@ footer .text-white a:hover {
   padding: 12px 24px;
   transition: background-color 0.3s;
 }/*# sourceMappingURL=styles.css.map */
-
-a.glink{
-  display: block;
-}
-a.glink::after{
-  margin-top: 10px;
-}
-.langs-list{
-  width: 70px !important;
-  min-width: 0px !important;
-  text-align: center !important;
-}
