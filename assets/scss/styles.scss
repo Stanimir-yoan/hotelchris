@@ -1,6 +1,6 @@
 
 // Variables
-$color-primary: #7bc5c1;
+$color-primary: #76b7e3;
 $color-accent: #eab875;
 $color-logo: #333;
 $color-text-dark: #333;
@@ -709,6 +709,87 @@ $font-size-logo-mobile: 2rem;
   }
 }
 
+//PRICES PAGE
+.pricing {
+  padding: 80px 20px;
+
+  &__wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #ede9e6;
+    padding: 40px;
+  }
+
+  &__header,
+  &__row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr;
+    align-items: stretch;
+  }
+
+  /* HEADER */
+  &__header {
+    font-weight: 600;
+    font-size: 20px;
+    color: #333;
+    border-bottom: 3px solid #979797;
+
+    small {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 8px;
+      line-height: 1.4;
+      color: #555;
+    }
+  }
+
+  /* ROWS */
+  &__row {
+    border-bottom: 1px solid #979797;
+    
+     &:last-child {
+    border-bottom: none;
+  }
+  }
+  
+
+  /* COLUMNS */
+  &__col {
+    padding: 35px 30px; // moved padding here
+
+    /* EVERY SECOND COLUMN */
+    &:nth-child(even) {
+      background: #ddd8d4;
+      
+    }
+
+    &--center {
+      text-align: center;
+    }
+
+    &--price {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    &--price-secondary {
+      text-align: center;
+      font-weight: 600;
+    }
+
+    & img{
+      width: 50px;
+    }
+  }
+}
+
+
+.capacity-text {
+  font-size: 15px;
+  color: #555;
+}
 // Form
 form {
   .btn-primary {
@@ -796,7 +877,7 @@ form {
 // Footer
 footer {
   background:
-    linear-gradient(rgba($color-primary, 0.8), rgba(93, 169, 165, 1)),
+    linear-gradient(rgba($color-primary, 0.8), #69aad4),
     url("../images/footer-img.jpg");
   background-position: center;
   background-size: cover;
