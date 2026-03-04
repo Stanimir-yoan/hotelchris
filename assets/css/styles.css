@@ -16,7 +16,7 @@
 }
 
 .top-bar .bi-sun-fill {
-  color: #eab875;
+  color: #FFB74D;
 }
 .top-bar .dropdown {
   font-size: 0.9rem;
@@ -190,15 +190,15 @@
 }
 .info-feature-section .feature-content button {
   background-color: transparent;
-  border: 2px solid #eab875;
+  border: 2px solid #FFB74D;
   border-radius: 20px;
-  color: #eab875;
+  color: #FFB74D;
   font-weight: 500;
   padding: 0.5rem 1.5rem;
   transition: background-color 0.3s ease;
 }
 .info-feature-section .feature-content button:hover {
-  background-color: rgba(234, 184, 117, 0.1);
+  background-color: rgba(255, 183, 77, 0.1);
 }
 .info-feature-section .feature-image {
   align-items: center;
@@ -247,7 +247,7 @@
   margin-bottom: 0.4rem;
 }
 .rooms-section .room-card .highlight {
-  color: #eab875;
+  color: #FFB74D;
   font-weight: 600;
 }
 .rooms-section .room-card .room-discription-extras {
@@ -284,12 +284,12 @@
   background-color: #f0f0f0;
 }
 .rooms-section .room-card .room-buttons .btn.btn-yellow {
-  background-color: #eab875;
+  background-color: #FFB74D;
   border: none;
   color: #fff;
 }
 .rooms-section .room-card .room-buttons .btn.btn-yellow:hover {
-  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
+  background-color: rgb(255, 166.4966292135, 36.2);
 }
 .rooms-section .room-card .separator-line {
   background-color: rgba(0, 0, 0, 0.488);
@@ -324,7 +324,7 @@
   padding: 20px;
 }
 #rooms-inners-section .room-details .content-column .reserve-button {
-  background-color: #eab875;
+  background-color: #FFB74D;
   border: none;
   border-radius: 6px;
   color: #fff;
@@ -333,7 +333,7 @@
   transition: background-color 0.3s;
 }
 #rooms-inners-section .room-details .content-column .reserve-button:hover {
-  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
+  background-color: rgb(255, 166.4966292135, 36.2);
 }
 #rooms-inners-section .room-details .content-column .room-description {
   color: #555;
@@ -455,7 +455,7 @@
   flex-grow: 1;
 }
 .more-rooms .room-card .room-card-content .room-card-button {
-  background-color: #eab875;
+  background-color: #FFB74D;
   border: none;
   border-radius: 6px;
   color: #fff;
@@ -464,7 +464,7 @@
   transition: background-color 0.3s;
 }
 .more-rooms .room-card .room-card-content .room-card-button:hover {
-  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
+  background-color: rgb(255, 166.4966292135, 36.2);
 }
 .more-rooms .room-card .room-card-content .room-card-description {
   color: #555;
@@ -530,7 +530,7 @@
 }
 .contact-form-wrapper button {
   border-radius: 0;
-  background-color: #eab875 !important;
+  background-color: #FFB74D !important;
 }
 
 .contact-info {
@@ -546,7 +546,7 @@
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  color: #eab875;
+  color: #FFB74D;
   margin-bottom: 15px;
 }
 .contact-info .info-title .icon {
@@ -735,12 +735,12 @@ footer .text-white a:hover {
 }
 
 .btn-yellow {
-  background-color: #eab875;
+  background-color: #FFB74D;
   border: none;
   color: #fff;
 }
 .btn-yellow:hover {
-  background-color: rgb(228.6113207547, 165.7811320755, 81.5886792453);
+  background-color: rgb(255, 166.4966292135, 36.2);
 }
 
 .grey-button {
