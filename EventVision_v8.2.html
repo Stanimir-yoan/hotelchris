@@ -1,0 +1,2763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0b0e">
+<title>EventVision — HelloXR Scan</title>
+<style>
+:root{--bg:#0b0b0e;--panel:#15151a;--panel2:#1e1e24;--text:#fff;--muted:#a7a7b0;--line:#303038;--accent:#6b5cff;--good:#43d47c}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh}
+button{font:inherit}
+.shell{max-width:720px;margin:0 auto;padding:22px 16px 40px}
+.eyebrow{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--muted)}
+h1{margin:7px 0 8px;font-size:30px;line-height:1.05}
+p{margin:0;color:var(--muted);line-height:1.5}
+.card{margin-top:15px;padding:16px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+.steps{display:grid;gap:10px;margin-top:14px}
+.step{display:grid;grid-template-columns:34px 1fr;gap:10px}
+.num{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--panel2);font-weight:800}
+.small{font-size:12px;color:var(--muted);line-height:1.4;margin-top:3px}
+.primary{width:100%;height:56px;border:0;border-radius:15px;background:var(--accent);color:#fff;font-weight:800;margin-top:15px}
+.primary:disabled{opacity:.4}
+#support{margin-top:10px;font-size:12px;color:var(--muted)}
+.good{color:#8bf0ae}.warn{color:#ffd08a}
+#result{display:none}.show{display:block}
+#plan{width:100%;display:block;background:#0d0d10;border-radius:14px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric,.wall{border:1px solid var(--line);background:#0f0f13;border-radius:12px;padding:10px}
+.metric small,.wall small{display:block;color:var(--muted);font-size:10px}
+.metric b,.wall b{display:block;margin-top:3px;font-size:14px}
+#walls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+
+#hud{position:fixed;inset:0;display:none;pointer-events:none;z-index:99999}
+#hud.active{display:block}
+.hudTop{position:absolute;top:calc(8px + env(safe-area-inset-top));left:8px;right:8px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.pill{background:rgba(15,15,18,.70);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);padding:8px 10px;border-radius:999px;font-size:11px;font-weight:800}
+#hint{max-width:72%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cross{position:absolute;left:50%;top:54%;width:54px;height:54px;transform:translate(-50%,-50%);pointer-events:none}
+.cross:before,.cross:after{content:"";position:absolute;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.cross:before{left:26px;top:0;width:2px;height:54px}
+.cross:after{left:0;top:26px;width:54px;height:2px}
+.crossDot{position:absolute;left:19px;top:19px;width:16px;height:16px;border-radius:50%;border:2px solid #fff}
+.hudBottom{position:absolute;left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));display:grid;grid-template-columns:.8fr 1.35fr 1fr;gap:8px;pointer-events:auto}
+.hudBottom button{height:50px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(16,16,20,.78);color:#fff;font-weight:800;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hudBottom .finish{background:rgba(107,92,255,.93)}
+.hudBottom button:disabled{opacity:.4}
+
+body.xr-active{background:transparent!important;overflow:hidden}
+body.xr-active .shell{display:none!important}
+body.xr-active canvas{background:transparent!important}
+
+
+
+
+#result{
+  display:none;
+  margin-top:18px;
+  padding:0;
+  background:transparent;
+  border:0;
+}
+#result.show{display:block !important;border:0 !important}
+.resultTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.resultTitle{margin:5px 0 0;font-size:22px;line-height:1.1}
+.resultScanAgain{min-height:42px;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:#fff;font-weight:750;white-space:nowrap}
+#plan{width:calc(100% + 12px);margin-left:-6px;display:block;background:#0d0d10;border-radius:16px}
+#detailsPanel{margin-top:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#detailsPanel summary{min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;font-size:14px;font-weight:800;user-select:none}
+#detailsPanel summary::-webkit-details-marker{display:none}
+.detailsChevron{font-size:18px;color:var(--muted);transition:transform .18s ease}
+#detailsPanel[open] .detailsChevron{transform:rotate(180deg)}
+.detailsBody{padding:0 0 12px}
+#detailsPanel .metrics{margin-top:0}
+#detailsPanel #walls{margin-top:8px}
+@media (max-width:420px){
+  .shell{padding-left:10px;padding-right:10px}
+  #plan{width:calc(100% + 8px);margin-left:-4px}
+  .resultTop{align-items:center}
+  .resultTitle{font-size:20px}
+}
+
+
+.homeMeta{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.versionBadge{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.04em}
+.addFurnitureBtn{width:100%;height:54px;margin-top:12px;border:0;border-radius:14px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:800}
+.addFurnitureIcon{font-size:22px;line-height:1;font-weight:400}
+.furnitureModal{position:fixed;inset:0;z-index:120000;display:none;align-items:flex-end;background:rgba(0,0,0,.55);padding-top:60px;pointer-events:auto}
+.furnitureModal.open{display:flex}
+.furnitureSheet{width:100%;max-width:720px;margin:0 auto;background:#121217;border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;padding:8px 14px calc(14px + env(safe-area-inset-bottom));max-height:86%;overflow:auto;box-shadow:0 -20px 60px rgba(0,0,0,.45)}
+.furnitureHandle{width:42px;height:4px;border-radius:999px;background:#3b3b43;margin:2px auto 13px}
+.furnitureHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.furnitureHeader h3{margin:5px 0 0;font-size:22px}
+.closeFurniture{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:#fff;font-size:24px;line-height:1}
+.furnitureGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.furnitureType{min-height:112px;border:1px solid var(--line);border-radius:15px;background:#19191e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;font-size:13px;font-weight:750}
+.furnitureType svg{width:39px;height:39px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;color:#d6d6dc}
+.furnitureType.selected{border-color:var(--accent);background:rgba(107,92,255,.16);box-shadow:inset 0 0 0 1px var(--accent)}
+.furnitureType.selected svg{color:#fff}
+.confirmFurniture{width:100%;height:52px;margin-top:12px;border:0;border-radius:14px;background:var(--accent);color:#fff;font-weight:800}
+.confirmFurniture:disabled{opacity:.38}
+body.modal-open{overflow:hidden}
+@media (min-width:520px){.furnitureGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+
+/* v7 — floor-plan furniture editing */
+.planEditor{
+  position:relative;
+  width:calc(100% + 12px);
+  margin-left:-6px;
+}
+
+.planEditor #plan{
+  width:100%;
+  margin-left:0;
+  display:block;
+  touch-action:none;
+}
+
+#furnitureLayer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  border-radius:16px;
+}
+
+.furnitureItem{
+  position:absolute;
+  width:44px;
+  height:44px;
+  transform-origin:center center;
+  pointer-events:auto;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  display:grid;
+  place-items:center;
+  cursor:grab;
+}
+
+/* The visible footprint can be physically smaller than the touch target. */
+.furnitureHitArea{
+  position:absolute;
+  left:50%;
+  top:50%;
+  min-width:44px;
+  min-height:44px;
+  width:100%;
+  height:100%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+
+.furnitureItem:active{
+  cursor:grabbing;
+}
+
+.furnitureVisual{
+  position:relative;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  border:2px solid #fff;
+  border-radius:18%;
+  background:rgba(107,92,255,.22);
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+
+.furnitureVisual.chair:before{
+  content:"";
+  position:absolute;
+  left:15%;
+  right:15%;
+  top:10%;
+  height:24%;
+  border:2px solid #fff;
+  border-bottom:0;
+  border-radius:24% 24% 0 0;
+}
+
+.furnitureVisual.chair:after{
+  content:"";
+  position:absolute;
+  left:20%;
+  right:20%;
+  bottom:14%;
+  height:30%;
+  border:2px solid #fff;
+  border-radius:22%;
+}
+
+.furnitureItem.selected .furnitureVisual{
+  outline:2px solid #6b5cff;
+  outline-offset:4px;
+}
+
+.furnitureItem.selected:after{
+  content:"";
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#6b5cff;
+  top:-4px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+#furnitureToolbar{
+  display:none;
+  grid-template-columns:1fr auto auto auto;
+  gap:7px;
+  align-items:center;
+  margin-top:10px;
+  padding:8px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+}
+
+#furnitureToolbar.visible{
+  display:grid;
+}
+
+#furnitureToolbar .selectedLabel{
+  min-width:0;
+  font-size:12px;
+  font-weight:800;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.toolBtn{
+  min-width:44px;
+  height:44px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--panel2);
+  color:#fff;
+  font-size:17px;
+  font-weight:800;
+}
+
+.toolBtn.delete{
+  font-size:14px;
+}
+
+#furnitureCount{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.furnitureHint{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+}
+
+/* furniture picker add action */
+#furnitureAddSelected{
+  width:100%;
+  height:50px;
+  border:0;
+  border-radius:14px;
+  margin-top:12px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:800;
+}
+
+#furnitureAddSelected:disabled{
+  opacity:.4;
+}
+
+
+/* v7 — keep XR tracking alive behind the finished plan */
+body.xr-active.layout-mode{
+  overflow:auto;
+  background:var(--bg) !important;
+}
+
+body.xr-active.layout-mode .shell{
+  display:block !important;
+  position:relative;
+  z-index:20000;
+  min-height:100vh;
+  background:var(--bg);
+}
+
+body.xr-active.layout-mode #hud{
+  display:none !important;
+}
+
+body.xr-active.layout-mode canvas{
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+.resultHeaderActions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.trackingBadge{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel2);
+  color:#fff;
+  font-size:11px;
+  font-weight:750;
+  white-space:nowrap;
+}
+
+.trackingDot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#43d47c;
+  box-shadow:0 0 0 3px rgba(67,212,124,.13);
+}
+
+.trackingBadge.paused .trackingDot{
+  background:#888894;
+  box-shadow:none;
+}
+
+#plan{
+  overflow:visible;
+}
+
+.phonePoseMarker .phoneHalo{
+  fill:rgba(67,212,124,.13);
+  stroke:rgba(67,212,124,.42);
+  stroke-width:1.5;
+}
+
+.phonePoseMarker .phoneDot{
+  fill:#43d47c;
+  stroke:#fff;
+  stroke-width:2.5;
+}
+
+.phonePoseMarker .phoneArrow{
+  fill:#43d47c;
+  stroke:#fff;
+  stroke-width:1.5;
+  stroke-linejoin:round;
+}
+
+.phonePoseMarker .phoneLabel{
+  fill:#fff;
+  font-size:11px;
+  font-weight:700;
+  paint-order:stroke;
+  stroke:#0d0d10;
+  stroke-width:3px;
+  stroke-linejoin:round;
+}
+
+.phonePoseMarker.paused{
+  opacity:.55;
+}
+
+@media (max-width:420px){
+  .trackingBadge{
+    padding:0 8px;
+  }
+  #trackingText{
+    display:none;
+  }
+}
+
+
+/* v8 — numbered corners, coordinates and camera capture */
+.resultActionGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+
+.resultActionGrid .addFurnitureBtn{
+  margin-top:0;
+}
+
+.cameraViewBtn{
+  background:var(--panel2) !important;
+  border:1px solid var(--line) !important;
+}
+
+.detailSectionTitle{
+  margin-top:14px;
+  margin-bottom:7px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.cornerDetails{
+  display:grid;
+  gap:7px;
+}
+
+.cornerCoordCard{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:9px;
+  align-items:start;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#0f0f13;
+}
+
+.cornerNumber{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+}
+
+.coordTitle{
+  font-size:12px;
+  font-weight:800;
+}
+
+.coordLocal{
+  margin-top:3px;
+  font-size:11px;
+  color:#fff;
+}
+
+.coordWorld{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+}
+
+.captureDetails{
+  display:grid;
+  gap:7px;
+}
+
+.captureDetailCard{
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#0f0f13;
+}
+
+.captureDetailCard strong{
+  display:block;
+  font-size:12px;
+}
+
+.captureDetailCard span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+}
+
+.emptyDetail{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.planCornerNumber{
+  fill:#fff;
+  font-size:12px;
+  font-weight:900;
+  text-anchor:middle;
+  dominant-baseline:central;
+  paint-order:stroke;
+  stroke:#0d0d10;
+  stroke-width:4px;
+  stroke-linejoin:round;
+}
+
+.photoHud{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:100000;
+  pointer-events:none;
+}
+
+.photoHud.active{
+  display:block;
+}
+
+.photoHudTop{
+  position:absolute;
+  top:calc(8px + env(safe-area-inset-top));
+  left:8px;
+  right:8px;
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+}
+
+.photoHudBottom{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-columns:1fr 74px 1fr;
+  align-items:center;
+  gap:10px;
+  pointer-events:auto;
+}
+
+.photoSecondary{
+  min-height:48px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:14px;
+  background:rgba(15,15,19,.72);
+  color:#fff;
+  font-weight:800;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.photoSecondary:disabled{
+  opacity:.65;
+}
+
+.photoShutter{
+  width:70px;
+  height:70px;
+  border-radius:999px;
+  border:3px solid #fff;
+  background:rgba(255,255,255,.14);
+  display:grid;
+  place-items:center;
+  justify-self:center;
+}
+
+.shutterInner{
+  width:54px;
+  height:54px;
+  border-radius:999px;
+  background:#fff;
+  transition:transform .12s ease;
+}
+
+.photoShutter:active .shutterInner{
+  transform:scale(.9);
+}
+
+body.xr-active.photo-mode .shell{
+  display:none !important;
+}
+
+body.xr-active.photo-mode #hud{
+  display:none !important;
+}
+
+body.xr-active.photo-mode canvas{
+  opacity:1 !important;
+  pointer-events:none;
+}
+
+.photoPreviewModal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:flex-end;
+  z-index:120000;
+  padding:12px 12px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(0,0,0,.58);
+}
+
+.photoPreviewModal.open{
+  display:flex;
+}
+
+.photoPreviewSheet{
+  width:100%;
+  max-height:90%;
+  overflow:auto;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(17,17,21,.98);
+}
+
+.photoPreviewHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.photoPreviewHeader h3{
+  margin:4px 0 0;
+}
+
+#photoPreviewImage{
+  display:block;
+  width:100%;
+  max-height:62vh;
+  object-fit:contain;
+  border-radius:14px;
+  background:#000;
+}
+
+.photoCaptureMeta{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.45;
+}
+
+.photoPreviewActions{
+  display:grid;
+  grid-template-columns:1.35fr 1fr;
+  gap:8px;
+  margin-top:11px;
+}
+
+.photoPreviewActions .confirmFurniture{
+  margin:0;
+}
+
+.photoKeepBtn{
+  min-height:50px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel2);
+  color:#fff;
+  font-weight:800;
+}
+
+.captureFlash{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  z-index:130000;
+  pointer-events:none;
+  animation:captureFlash .22s ease forwards;
+}
+
+@keyframes captureFlash{
+  from{opacity:.9}
+  to{opacity:0}
+}
+
+@media (max-width:420px){
+  .resultActionGrid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .photoHudBottom{
+    grid-template-columns:1fr 68px 1fr;
+  }
+
+  .photoShutter{
+    width:64px;
+    height:64px;
+  }
+
+  .shutterInner{
+    width:48px;
+    height:48px;
+  }
+}
+
+
+/* v8.1c — screenshot mode + wall labels */
+.screenshotActionGrid{
+  grid-template-columns:1fr 1fr;
+}
+
+.screenshotModeBtn{
+  background:var(--accent) !important;
+  border:1px solid transparent !important;
+}
+
+.debugCaptureLink{
+  width:100%;
+  margin-top:8px;
+  min-height:38px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:750;
+}
+
+.debugActionRow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.debugActionRow .debugCaptureLink{margin-top:0;}
+
+.planWallLabel{
+  fill:#9fa1ad;
+  font-size:10px;
+  font-weight:800;
+  text-anchor:middle;
+  paint-order:stroke;
+  stroke:#0d0d10;
+  stroke-width:3px;
+  stroke-linejoin:round;
+}
+
+.screenshotHud{
+  position:fixed;
+  inset:0;
+  z-index:110000;
+  display:none;
+  pointer-events:none;
+}
+
+.screenshotHud.active{
+  display:block;
+}
+
+.screenshotTop{
+  position:absolute;
+  top:calc(8px + env(safe-area-inset-top));
+  left:8px;
+  right:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+}
+
+.screenshotGuide{
+  position:absolute;
+  left:50%;
+  bottom:calc(88px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(82%,360px);
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(15,15,18,.55);
+  color:#fff;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.screenshotGuideTitle{
+  font-size:12px;
+  font-weight:900;
+}
+
+.screenshotGuideText{
+  margin-top:3px;
+  font-size:10px;
+  color:rgba(255,255,255,.75);
+  line-height:1.35;
+}
+
+.screenshotBottom{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  display:flex;
+  justify-content:center;
+  pointer-events:auto;
+}
+
+.screenshotBack{
+  min-width:170px;
+  min-height:48px;
+  padding:0 16px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(15,15,18,.72);
+  color:#fff;
+  font-weight:850;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+body.xr-active.screenshot-mode{
+  overflow:hidden;
+  background:transparent !important;
+}
+
+body.xr-active.screenshot-mode .shell{
+  display:none !important;
+}
+
+body.xr-active.screenshot-mode #hud,
+body.xr-active.screenshot-mode #photoHud{
+  display:none !important;
+}
+
+body.xr-active.screenshot-mode canvas{
+  opacity:1 !important;
+  pointer-events:none !important;
+}
+
+body.xr-active.screenshot-mode .screenshotHud{
+  display:block !important;
+}
+
+@media (max-width:420px){
+  .screenshotGuide{width:86%;}
+}
+
+
+/* v8.1d — real-world furniture scale */
+.furnitureScaleNote{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.35;
+}
+
+.furnitureItem[data-type="chair"] .furnitureVisual{
+  background:rgba(107,92,255,.18);
+}
+
+</style>
+</head>
+<body>
+<main class="shell" id="mainShell">
+  <div class="homeMeta"><div class="eyebrow">EVENTVISION · HELLOXR TEST</div><span class="versionBadge">v8.2</span></div>
+  <h1>Scan the real floor</h1>
+  <p>This build uses WebXR hit testing for real 3D floor points while HelloXR supplies ARKit camera passthrough and tracking.</p>
+
+  <section class="card" id="introCard">
+    <strong>Scan workflow</strong>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><div><b>Enter AR</b><div class="small">Move the phone slowly until the floor target appears.</div></div></div>
+      <div class="step"><div class="num">2</div><div><b>Aim + tap</b><div class="small">Aim at each wall/floor corner and press Add corner.</div></div></div>
+      <div class="step"><div class="num">3</div><div><b>Close room</b><div class="small">Finish after at least 3 corners to create the measured top view.</div></div></div>
+    </div>
+    <button id="start" class="primary" disabled>Enter AR scan</button>
+    <div id="support">Checking WebXR…</div>
+  </section>
+
+  <section id="result">
+    <div class="resultTop">
+      <div>
+        <div class="eyebrow">SCAN COMPLETE</div>
+        <h2 class="resultTitle">Measured floor plan</h2>
+      </div>
+      <div class="resultHeaderActions">
+        <div id="trackingBadge" class="trackingBadge">
+          <span class="trackingDot"></span>
+          <span id="trackingText">Live phone</span>
+        </div>
+        <button id="scanAgain" class="resultScanAgain">Scan again</button>
+      </div>
+    </div>
+
+    <div class="planEditor" id="planEditor">
+      <svg id="plan" viewBox="0 0 500 430"></svg>
+      <div id="furnitureLayer" aria-label="Furniture layout layer"></div>
+    </div>
+
+    <div id="furnitureToolbar" aria-live="polite">
+      <div class="selectedLabel" id="selectedFurnitureLabel">Chair selected</div>
+      <button type="button" class="toolBtn" id="rotateLeft" aria-label="Rotate left">↺</button>
+      <button type="button" class="toolBtn" id="rotateRight" aria-label="Rotate right">↻</button>
+      <button type="button" class="toolBtn delete" id="deleteFurniture" aria-label="Delete furniture">Delete</button>
+    </div>
+    <div id="furnitureCount"></div>
+    <div class="furnitureHint">Drag furniture directly on the plan. Select an item to rotate or delete it.</div>
+    <div class="furnitureScaleNote">Chair footprint: 0.55 × 0.55 m, scaled from the measured room.</div>
+
+    <div class="resultActionGrid screenshotActionGrid">
+      <button id="screenshotMode" class="addFurnitureBtn screenshotModeBtn">
+        <span class="addFurnitureIcon">▣</span>
+        <span>Screenshot mode</span>
+      </button>
+
+      <button id="addFurniture" class="addFurnitureBtn">
+        <span class="addFurnitureIcon">＋</span>
+        <span>Add furniture</span>
+      </button>
+    </div>
+
+    <div class="debugActionRow">
+      <button id="cameraView" class="debugCaptureLink" type="button">
+        Precise capture + data
+      </button>
+      <button id="exportData" class="debugCaptureLink" type="button">
+        Export scene JSON
+      </button>
+    </div>
+
+    <details id="detailsPanel">
+      <summary>
+        <span>Details</span>
+        <span class="detailsChevron">⌄</span>
+      </summary>
+      <div class="detailsBody">
+        <div class="metrics">
+          <div class="metric"><small>Corners</small><b id="cornerMetric">—</b></div>
+          <div class="metric"><small>Area</small><b id="areaMetric">—</b></div>
+        </div>
+
+        <div class="detailSectionTitle">Corner coordinates</div>
+        <div id="cornerDetails" class="cornerDetails"></div>
+
+        <div class="detailSectionTitle">Walls</div>
+        <div id="walls"></div>
+
+        <div class="detailSectionTitle">Screenshot pose</div>
+        <div id="screenshotPoseDetails" class="captureDetails">
+          <div class="emptyDetail">No screenshot pose saved yet.</div>
+        </div>
+
+        <div class="detailSectionTitle">Captured views</div>
+        <div id="captureDetails" class="captureDetails">
+          <div class="emptyDetail">No camera views captured yet.</div>
+        </div>
+      </div>
+    </details>
+  </section>
+</main>
+
+<div id="furnitureModal" class="furnitureModal" aria-hidden="true">
+  <div class="furnitureSheet" role="dialog" aria-modal="true" aria-labelledby="furnitureTitle">
+    <div class="furnitureHandle"></div>
+    <div class="furnitureHeader">
+      <div>
+        <div class="eyebrow">ADD FURNITURE</div>
+        <h3 id="furnitureTitle">Choose a type</h3>
+      </div>
+      <button id="closeFurniture" class="closeFurniture" aria-label="Close furniture picker">×</button>
+    </div>
+
+    <div class="furnitureGrid" id="furnitureGrid">
+      <button class="furnitureType" data-type="Chair">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 9v15h18V9M14 24h22v6H14zM18 30v9M32 30v9"/></svg>
+        <span>Chair</span>
+      </button>
+      <button class="furnitureType" data-type="Table">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 17h30v8H9zM14 25v14M34 25v14"/></svg>
+        <span>Table</span>
+      </button>
+      <button class="furnitureType" data-type="Lounge">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 22v-5c0-3 2-5 5-5h14c3 0 5 2 5 5v6M9 22v13h30V22M14 35v4M34 35v4M15 27h18"/></svg>
+        <span>Lounge</span>
+      </button>
+      <button class="furnitureType" data-type="Bar">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 13h30l-4 10H13zM13 23h22v15H13zM18 29h12"/></svg>
+        <span>Bar</span>
+      </button>
+      <button class="furnitureType" data-type="Stage / DJ">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 29h32v9H8zM14 29V17h20v12M19 23h10M24 12v6"/></svg>
+        <span>Stage / DJ</span>
+      </button>
+      <button class="furnitureType" data-type="Decoration">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8l3.7 8.5L37 17l-7 6 2.3 9L24 27l-8.3 5 2.3-9-7-6 9.3-.5z"/></svg>
+        <span>Decoration</span>
+      </button>
+      <button class="furnitureType" data-type="Lighting">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 18a7 7 0 0114 0c0 4-3 6-4 9h-6c-1-3-4-5-4-9zM21 31h6M22 35h4M24 5v6M8 19h5M35 19h5M13 8l4 4M35 8l-4 4"/></svg>
+        <span>Lighting</span>
+      </button>
+      <button class="furnitureType" data-type="Plant">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 38V20M24 27c-8 0-12-5-12-12 8 0 12 5 12 12zM24 22c8 0 12-5 12-12-8 0-12 5-12 12zM17 38h14"/></svg>
+        <span>Plant</span>
+      </button>
+    </div>
+
+    <button id="confirmFurniture" class="confirmFurniture" disabled>Choose furniture type</button>
+  </div>
+</div>
+
+<div id="hud">
+  <div class="hudTop">
+    <div class="pill" id="hint">Finding floor…</div>
+    <div class="pill" id="count">0 corners</div>
+  </div>
+
+  <div class="cross"><div class="crossDot"></div></div>
+
+  <div class="hudBottom">
+    <button id="undo" disabled>Undo</button>
+    <button id="addCorner" class="finish" disabled>Add corner</button>
+    <button id="finish" disabled>Finish</button>
+  </div>
+</div>
+
+<div id="screenshotHud" class="screenshotHud" aria-hidden="true">
+  <div class="screenshotTop">
+    <div class="pill" id="screenshotPoseStatus">Live pose</div>
+    <div class="pill">Use iPhone screenshot</div>
+  </div>
+
+  <div class="screenshotGuide">
+    <div class="screenshotGuideTitle">Screenshot mode</div>
+    <div class="screenshotGuideText">
+      Use the iPhone side button + volume up to save what you see.
+    </div>
+  </div>
+
+  <div class="screenshotBottom">
+    <button id="backFromScreenshot" class="screenshotBack">← Back to plan</button>
+  </div>
+</div>
+
+<div id="photoHud" class="photoHud" aria-hidden="true">
+  <div class="photoHudTop">
+    <div class="pill">PHOTO VIEW · AR OVERLAY</div>
+    <div class="pill" id="photoPoseText">Live pose</div>
+  </div>
+
+  <div class="photoHudBottom">
+    <button id="backToPlan" class="photoSecondary">← Plan</button>
+    <button id="capturePhoto" class="photoShutter" aria-label="Capture photo">
+      <span class="shutterInner"></span>
+    </button>
+    <button id="photoInfo" class="photoSecondary" disabled>Overlay on</button>
+  </div>
+</div>
+
+<div id="photoPreviewModal" class="photoPreviewModal" aria-hidden="true">
+  <div class="photoPreviewSheet">
+    <div class="photoPreviewHeader">
+      <div>
+        <div class="eyebrow">CAPTURED VIEW</div>
+        <h3>Camera + room overlay</h3>
+      </div>
+      <button id="closePhotoPreview" class="closeFurniture" aria-label="Close preview">×</button>
+    </div>
+
+    <img id="photoPreviewImage" alt="Captured AR camera view with room corner and wall overlay">
+
+    <div id="photoCaptureMeta" class="photoCaptureMeta"></div>
+
+    <div class="photoPreviewActions">
+      <button id="sharePhoto" class="confirmFurniture">Share / Save image</button>
+      <button id="keepPhoto" class="photoKeepBtn">Keep and return</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
+const el = {
+  start: document.getElementById('start'),
+  support: document.getElementById('support'),
+  hud: document.getElementById('hud'),
+  hint: document.getElementById('hint'),
+  count: document.getElementById('count'),
+  undo: document.getElementById('undo'),
+  addCorner: document.getElementById('addCorner'),
+  finish: document.getElementById('finish'),
+  result: document.getElementById('result'),
+  plan: document.getElementById('plan'),
+  cornerMetric: document.getElementById('cornerMetric'),
+  areaMetric: document.getElementById('areaMetric'),
+  walls: document.getElementById('walls'),
+  trackingBadge: document.getElementById('trackingBadge'),
+  trackingText: document.getElementById('trackingText'),
+  introCard: document.getElementById('introCard'),
+  scanAgain: document.getElementById('scanAgain'),
+  addFurniture: document.getElementById('addFurniture'),
+  furnitureModal: document.getElementById('furnitureModal'),
+  closeFurniture: document.getElementById('closeFurniture'),
+  furnitureGrid: document.getElementById('furnitureGrid'),
+  confirmFurniture: document.getElementById('confirmFurniture'),
+  cameraView: document.getElementById('cameraView'),
+  exportData: document.getElementById('exportData'),
+  screenshotMode: document.getElementById('screenshotMode'),
+  screenshotHud: document.getElementById('screenshotHud'),
+  screenshotPoseStatus: document.getElementById('screenshotPoseStatus'),
+  screenshotPoseDetails: document.getElementById('screenshotPoseDetails'),
+  backFromScreenshot: document.getElementById('backFromScreenshot'),
+  cornerDetails: document.getElementById('cornerDetails'),
+  captureDetails: document.getElementById('captureDetails'),
+  photoHud: document.getElementById('photoHud'),
+  photoPoseText: document.getElementById('photoPoseText'),
+  backToPlan: document.getElementById('backToPlan'),
+  capturePhoto: document.getElementById('capturePhoto'),
+  photoPreviewModal: document.getElementById('photoPreviewModal'),
+  photoPreviewImage: document.getElementById('photoPreviewImage'),
+  photoCaptureMeta: document.getElementById('photoCaptureMeta'),
+  closePhotoPreview: document.getElementById('closePhotoPreview'),
+  sharePhoto: document.getElementById('sharePhoto'),
+  keepPhoto: document.getElementById('keepPhoto')
+};
+
+let renderer, scene, camera, session, refSpace, hitSource, reticle;
+let hitValid = false;
+let latestHit = null;
+let completed = false;
+let floorY = null;
+let corners = [];
+let objects = [];
+let finishedCorners = [];
+let latestViewerPosition = null;
+let latestViewerOrientation = null;
+let planTransform = null;
+let phonePoseGroup = null;
+let scanSceneData = null;
+let captures = [];
+let activeCapture = null;
+let activeCaptureURL = null;
+let photoMode = false;
+let screenshotModeActive = false;
+let savedScreenshotPose = null;
+let latestXRViewData = null;
+let pendingXRFrameResolvers = [];
+
+const CORNER_LABEL_BASE_SCALE = 0.18;
+const CORNER_LABEL_SCALE_PER_METER = 0.05;
+const CORNER_LABEL_MIN_SCALE = 0.18;
+const CORNER_LABEL_MAX_SCALE = 0.52;
+
+let selectedFurnitureType = null;
+
+const distanceXZ = (a,b) => Math.hypot(b.x-a.x,b.z-a.z);
+
+function createRenderer(){
+  renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.xr.enabled = true;
+  renderer.setClearColor(0x000000,0);
+  renderer.setClearAlpha(0);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.domElement.style.position='fixed';
+  renderer.domElement.style.inset='0';
+  renderer.domElement.style.zIndex='1000';
+  renderer.domElement.style.background='transparent';
+  renderer.domElement.style.touchAction='none';
+  document.body.appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+  scene.background = null;
+  camera = new THREE.PerspectiveCamera();
+
+  scene.add(new THREE.HemisphereLight(0xffffff,0x666666,2));
+
+  reticle = new THREE.Mesh(
+    new THREE.RingGeometry(.05,.072,32).rotateX(-Math.PI/2),
+    new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false})
+  );
+  reticle.matrixAutoUpdate=false;
+  reticle.visible=false;
+  reticle.renderOrder=999;
+  scene.add(reticle);
+}
+
+async function check(){
+  if(!navigator.xr){
+    el.support.innerHTML='<span class="warn">No WebXR API. Open this URL in HelloXR, not Safari.</span>';
+    return;
+  }
+  try{
+    const supported = await navigator.xr.isSessionSupported('immersive-ar');
+    if(supported){
+      el.start.disabled=false;
+      el.support.innerHTML='<span class="good">Immersive AR available ✓</span>';
+    } else {
+      el.support.innerHTML='<span class="warn">AR unavailable here. Open the page inside HelloXR.</span>';
+    }
+  }catch(err){
+    el.support.textContent='WebXR check failed: '+err.message;
+  }
+}
+
+async function enterAR(){
+  if(!renderer) createRenderer();
+
+  try{
+    session = await navigator.xr.requestSession('immersive-ar',{
+      requiredFeatures:['hit-test'],
+      optionalFeatures:['local-floor','dom-overlay','computerVision'],
+      domOverlay:{root:document.body}
+    });
+  }catch(err){
+    alert('Could not start AR: '+err.message);
+    return;
+  }
+
+  completed=false;
+  corners=[];
+  finishedCorners=[];
+  latestViewerPosition=null;
+  latestViewerOrientation=null;
+  planTransform=null;
+  phonePoseGroup=null;
+  scanSceneData=null;
+  captures=[];
+  savedScreenshotPose=null;
+  latestXRViewData=null;
+  pendingXRFrameResolvers=[];
+  activeCapture=null;
+  if(activeCaptureURL){
+    URL.revokeObjectURL(activeCaptureURL);
+    activeCaptureURL=null;
+  }
+  photoMode=false;
+  screenshotModeActive=false;
+  renderScreenshotPoseDetails();
+  document.body.classList.remove('layout-mode');
+  document.body.classList.remove('photo-mode');
+  document.body.classList.remove('screenshot-mode');
+  floorY=null;
+  if(el.introCard) el.introCard.style.display='block';
+  clearObjects();
+  el.result.classList.remove('show');
+
+  await renderer.xr.setSession(session);
+
+  refSpace = await session.requestReferenceSpace('local-floor')
+    .catch(()=>session.requestReferenceSpace('local'));
+
+  const viewerSpace = await session.requestReferenceSpace('viewer');
+  hitSource = await session.requestHitTestSource({space:viewerSpace});
+
+  document.body.classList.add('xr-active');
+  el.hud.classList.add('active');
+  updateControls();
+
+  session.addEventListener('end',endAR);
+
+  renderer.setAnimationLoop(render);
+}
+
+function matrixToArray(matrix){
+  return matrix ? Array.from(matrix, value=>Number(value)) : null;
+}
+
+function getXRViewport(view){
+  try{
+    const baseLayer=session?.renderState?.baseLayer;
+    const vp=baseLayer?.getViewport?.(view);
+    if(!vp) return null;
+
+    return {
+      x:Number(vp.x),
+      y:Number(vp.y),
+      width:Number(vp.width),
+      height:Number(vp.height),
+      framebuffer_width:Number(baseLayer.framebufferWidth || 0),
+      framebuffer_height:Number(baseLayer.framebufferHeight || 0)
+    };
+  }catch(err){
+    return null;
+  }
+}
+
+function captureXRViewData(view,frameTimeMs){
+  if(!view) return null;
+
+  const t=view.transform;
+  const p=t?.position;
+  const q=t?.orientation;
+
+  return {
+    frame_time_ms:Number(frameTimeMs),
+    eye:view.eye || 'none',
+    position:p ? {x:Number(p.x),y:Number(p.y),z:Number(p.z)} : null,
+    orientation_quaternion:q ? {x:Number(q.x),y:Number(q.y),z:Number(q.z),w:Number(q.w)} : null,
+    view_matrix:matrixToArray(t?.inverse?.matrix),
+    projection_matrix:matrixToArray(view.projectionMatrix),
+    viewport:getXRViewport(view)
+  };
+}
+
+function cloneData(value){
+  return value == null ? null : JSON.parse(JSON.stringify(value));
+}
+
+function resolvePendingXRFrameSnapshots(){
+  if(!pendingXRFrameResolvers.length) return;
+
+  const snapshot={
+    camera:getCurrentCameraMetadata(),
+    xr_view:cloneData(latestXRViewData)
+  };
+
+  const pending=pendingXRFrameResolvers.splice(0);
+  pending.forEach(entry=>{
+    clearTimeout(entry.timer);
+    entry.resolve(cloneData(snapshot));
+  });
+}
+
+function waitForNextXRFrameSnapshot(timeoutMs=900){
+  return new Promise(resolve=>{
+    const entry={resolve,timer:null};
+    entry.timer=setTimeout(()=>{
+      const index=pendingXRFrameResolvers.indexOf(entry);
+      if(index>=0) pendingXRFrameResolvers.splice(index,1);
+      resolve({
+        camera:getCurrentCameraMetadata(),
+        xr_view:cloneData(latestXRViewData)
+      });
+    },timeoutMs);
+    pendingXRFrameResolvers.push(entry);
+  });
+}
+
+function getCaptureImageGeometry(outputWidth=null,outputHeight=null){
+  const actualDpr=Number(window.devicePixelRatio || 1);
+  const captureDpr=Math.min(actualDpr,2);
+
+  return {
+    output_width_px:Number(outputWidth || renderer?.domElement?.width || Math.round(window.innerWidth*captureDpr)),
+    output_height_px:Number(outputHeight || renderer?.domElement?.height || Math.round(window.innerHeight*captureDpr)),
+    viewport_css_width:Number(window.innerWidth),
+    viewport_css_height:Number(window.innerHeight),
+    device_pixel_ratio:actualDpr,
+    capture_pixel_ratio:captureDpr,
+    orientation:window.innerWidth>=window.innerHeight ? 'landscape' : 'portrait',
+    renderer_buffer_width:Number(renderer?.domElement?.width || 0),
+    renderer_buffer_height:Number(renderer?.domElement?.height || 0),
+    xr_viewport:cloneData(latestXRViewData?.viewport || null)
+  };
+}
+
+function render(_time,frame){
+  if(frame && refSpace){
+    const viewerPose = frame.getViewerPose(refSpace);
+
+    if(viewerPose){
+      const tp = viewerPose.transform.position;
+      const tq = viewerPose.transform.orientation;
+      const primaryView=viewerPose.views?.[0] || null;
+
+      latestViewerPosition = new THREE.Vector3(tp.x,tp.y,tp.z);
+      latestViewerOrientation = new THREE.Quaternion(tq.x,tq.y,tq.z,tq.w);
+      latestXRViewData = captureXRViewData(primaryView,_time);
+
+      if(photoMode && el.photoPoseText){
+        const forward=new THREE.Vector3(0,0,-1)
+          .applyQuaternion(latestViewerOrientation)
+          .normalize();
+        const yaw=Math.atan2(forward.x,-forward.z)*180/Math.PI;
+        el.photoPoseText.textContent=`${yaw.toFixed(0)}°`;
+      }
+
+      if(completed && planTransform){
+        updatePhonePoseMarker();
+      }
+
+      if(screenshotModeActive && el.screenshotPoseStatus){
+        el.screenshotPoseStatus.textContent='Live AR pose ✓';
+      }
+
+      updateCornerLabelScales();
+    }
+  }
+
+  // Hit testing is only needed while tracing the room.
+  if(!completed && frame && hitSource && refSpace){
+    const hits=frame.getHitTestResults(hitSource);
+
+    if(hits.length){
+      const pose=hits[0].getPose(refSpace);
+      if(pose){
+        reticle.visible=true;
+        reticle.matrix.fromArray(pose.transform.matrix);
+        hitValid=true;
+        el.addCorner.disabled=false;
+
+        const p=new THREE.Vector3().setFromMatrixPosition(reticle.matrix);
+        latestHit=p.clone();
+
+        if(corners.length>=3 && distanceXZ(p,corners[0])<.25){
+          reticle.material.color.set(0x43d47c);
+          el.hint.textContent='Near first corner — tap to close';
+        }else{
+          reticle.material.color.set(0xffffff);
+          el.hint.textContent=corners.length?'Aim at next floor corner':'Floor found — aim at first corner';
+        }
+      }
+    }else{
+      reticle.visible=false;
+      hitValid=false;
+      latestHit=null;
+      el.addCorner.disabled=true;
+      el.hint.textContent='Finding floor — move slowly';
+    }
+  }else if(completed){
+    reticle.visible=false;
+    hitValid=false;
+    latestHit=null;
+  }
+
+  renderer.render(scene,camera);
+  resolvePendingXRFrameSnapshots();
+}
+
+function placeCurrentHit(){
+  if(!hitValid || !latestHit || completed) {
+    el.hint.textContent='No floor point yet — move phone slowly';
+    return;
+  }
+
+  const p=latestHit.clone();
+
+  if(corners.length>=3 && distanceXZ(p,corners[0])<.25){
+    closeRoom();
+    return;
+  }
+
+  if(floorY===null) floorY=p.y;
+  p.y=floorY;
+
+  if(corners.length && distanceXZ(p,corners[corners.length-1])<.10){
+    el.hint.textContent='Move farther from previous corner';
+    return;
+  }
+
+  corners.push(p.clone());
+  rebuildObjects();
+  updateControls();
+  el.hint.textContent='Corner added ✓';
+}
+
+function makeNumberSprite(number){
+  const canvas=document.createElement('canvas');
+  canvas.width=128;
+  canvas.height=128;
+
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,128,128);
+
+  ctx.beginPath();
+  ctx.arc(64,64,39,0,Math.PI*2);
+  ctx.fillStyle=number===1?'#6b5cff':'rgba(15,15,18,.88)';
+  ctx.fill();
+  ctx.lineWidth=7;
+  ctx.strokeStyle='#ffffff';
+  ctx.stroke();
+
+  ctx.fillStyle='#ffffff';
+  ctx.font='900 50px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(String(number),64,66);
+
+  const texture=new THREE.CanvasTexture(canvas);
+  texture.needsUpdate=true;
+
+  const material=new THREE.SpriteMaterial({
+    map:texture,
+    transparent:true,
+    depthTest:false
+  });
+
+  const sprite=new THREE.Sprite(material);
+  sprite.scale.set(CORNER_LABEL_BASE_SCALE,CORNER_LABEL_BASE_SCALE,CORNER_LABEL_BASE_SCALE);
+  sprite.renderOrder=1001;
+  sprite.userData.kind='cornerLabel';
+  sprite.userData.number=number;
+  return sprite;
+}
+
+
+function updateCornerLabelScales(){
+  if(!latestViewerPosition) return;
+
+  objects.forEach(object=>{
+    if(object?.userData?.kind!=='cornerLabel') return;
+
+    const distance=object.position.distanceTo(latestViewerPosition);
+    const scale=Math.min(
+      CORNER_LABEL_MAX_SCALE,
+      Math.max(
+        CORNER_LABEL_MIN_SCALE,
+        distance * CORNER_LABEL_SCALE_PER_METER
+      )
+    );
+
+    object.scale.set(scale,scale,scale);
+  });
+}
+
+function marker(p,index){
+  const mesh=new THREE.Mesh(
+    new THREE.SphereGeometry(.04,16,12),
+    new THREE.MeshBasicMaterial({color:index===0?0x6b5cff:0xffffff})
+  );
+  mesh.position.copy(p);
+  mesh.renderOrder=1000;
+  scene.add(mesh);
+  objects.push(mesh);
+
+  const label=makeNumberSprite(index+1);
+  label.position.set(p.x,p.y+.115,p.z);
+  scene.add(label);
+  objects.push(label);
+}
+function line(a,b){
+  const geometry=new THREE.BufferGeometry().setFromPoints([a.clone(),b.clone()]);
+  const object=new THREE.Line(
+    geometry,
+    new THREE.LineBasicMaterial({color:0xffffff})
+  );
+  scene.add(object);
+  objects.push(object);
+}
+
+function clearObjects(){
+  objects.forEach(o=>{
+    scene.remove(o);
+    o.geometry?.dispose();
+    if(o.material?.map) o.material.map.dispose();
+    o.material?.dispose();
+  });
+  objects=[];
+}
+
+function rebuildObjects(){
+  clearObjects();
+  corners.forEach(marker);
+  for(let i=0;i<corners.length-1;i++) line(corners[i],corners[i+1]);
+  if(completed && corners.length>=3) line(corners[corners.length-1],corners[0]);
+}
+
+function updateControls(){
+  el.count.textContent=`${corners.length} corner${corners.length===1?'':'s'}`;
+  el.undo.disabled=completed || corners.length===0;
+  el.addCorner.disabled=completed || !hitValid;
+  el.finish.disabled=completed || corners.length<3;
+}
+
+function closeRoom(){
+  if(corners.length<3) return;
+
+  completed=true;
+  finishedCorners=corners.map(p=>p.clone());
+
+  rebuildObjects();
+  updateControls();
+  reticle.visible=false;
+
+  // Draw the plan but KEEP this exact XR session alive.
+  drawResult(finishedCorners);
+
+  document.body.classList.add('layout-mode');
+  el.hud.classList.remove('active');
+
+  if(el.trackingBadge){
+    el.trackingBadge.classList.remove('paused');
+  }
+  if(el.trackingText){
+    el.trackingText.textContent='Live phone';
+  }
+
+  requestAnimationFrame(()=>{
+    el.result.scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+  });
+}
+
+el.addCorner.addEventListener('click',e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  placeCurrentHit();
+});
+
+el.undo.addEventListener('click',e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  if(completed || !corners.length) return;
+  corners.pop();
+  if(!corners.length) floorY=null;
+  rebuildObjects();
+  updateControls();
+});
+
+el.finish.addEventListener('click',e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  closeRoom();
+});
+
+function areaXZ(points){
+  let sum=0;
+  for(let i=0;i<points.length;i++){
+    const a=points[i],b=points[(i+1)%points.length];
+    sum+=a.x*b.z-b.x*a.z;
+  }
+  return Math.abs(sum)/2;
+}
+
+
+function buildPlanCoordinateSystem(points){
+  if(!points || points.length<2) return null;
+
+  const origin=points[0];
+  const dx=points[1].x-origin.x;
+  const dz=points[1].z-origin.z;
+  const len=Math.hypot(dx,dz);
+
+  if(len<0.0001) return null;
+
+  const ex={x:dx/len,z:dz/len};
+  // Perpendicular axis on the floor.
+  const ez={x:-ex.z,z:ex.x};
+
+  return {origin,ex,ez};
+}
+
+function toPlanLocal(point,system){
+  const dx=point.x-system.origin.x;
+  const dz=point.z-system.origin.z;
+
+  return {
+    x:dx*system.ex.x+dz*system.ex.z,
+    z:dx*system.ez.x+dz*system.ez.z
+  };
+}
+
+function buildSceneData(points){
+  const system=buildPlanCoordinateSystem(points);
+
+  const cornerData=points.map((p,i)=>{
+    const local=system ? toPlanLocal(p,system) : {x:0,z:0};
+
+    return {
+      id:`corner_${String(i+1).padStart(2,'0')}`,
+      number:i+1,
+      world:{
+        x:Number(p.x),
+        y:Number(p.y),
+        z:Number(p.z)
+      },
+      plan:{
+        x:Number(local.x),
+        z:Number(local.z)
+      }
+    };
+  });
+
+  const wallData=points.map((p,i)=>({
+    id:`wall_${String(i+1).padStart(2,'0')}`,
+    from:i+1,
+    to:((i+1)%points.length)+1,
+    length_m:distanceXZ(p,points[(i+1)%points.length])
+  }));
+
+  return {
+    protocol_version:'EventVision_v8_2',
+    coordinate_system:{
+      unit:'meter',
+      floor_plane:'XZ',
+      plan_origin:'corner_01',
+      plan_x_axis:'corner_01_to_corner_02'
+    },
+    area_m2:areaXZ(points),
+    corners:cornerData,
+    walls:wallData
+  };
+}
+
+function renderCornerDetails(){
+  if(!el.cornerDetails || !scanSceneData) return;
+
+  el.cornerDetails.innerHTML='';
+
+  scanSceneData.corners.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='cornerCoordCard';
+
+    card.innerHTML=`
+      <div class="cornerNumber">${c.number}</div>
+      <div>
+        <div class="coordTitle">Corner ${c.number}</div>
+        <div class="coordLocal">
+          Plan: X ${c.plan.x.toFixed(3)} m · Z ${c.plan.z.toFixed(3)} m
+        </div>
+        <div class="coordWorld">
+          AR world: X ${c.world.x.toFixed(3)} · Y ${c.world.y.toFixed(3)} · Z ${c.world.z.toFixed(3)} m
+        </div>
+      </div>
+    `;
+
+    el.cornerDetails.appendChild(card);
+  });
+}
+
+function getCurrentCameraMetadata(){
+  if(!latestViewerPosition || !latestViewerOrientation) return null;
+
+  const forward=new THREE.Vector3(0,0,-1)
+    .applyQuaternion(latestViewerOrientation)
+    .normalize();
+
+  const yaw=Math.atan2(forward.x,-forward.z)*180/Math.PI;
+
+  return {
+    position:{
+      x:Number(latestViewerPosition.x),
+      y:Number(latestViewerPosition.y),
+      z:Number(latestViewerPosition.z)
+    },
+    orientation_quaternion:{
+      x:Number(latestViewerOrientation.x),
+      y:Number(latestViewerOrientation.y),
+      z:Number(latestViewerOrientation.z),
+      w:Number(latestViewerOrientation.w)
+    },
+    forward:{
+      x:Number(forward.x),
+      y:Number(forward.y),
+      z:Number(forward.z)
+    },
+    yaw_deg:Number(yaw),
+    xr_view_position:cloneData(latestXRViewData?.position || null),
+    xr_view_orientation_quaternion:cloneData(latestXRViewData?.orientation_quaternion || null),
+    view_matrix:cloneData(latestXRViewData?.view_matrix || null),
+    projection_matrix:cloneData(latestXRViewData?.projection_matrix || null),
+    xr_viewport:cloneData(latestXRViewData?.viewport || null),
+    xr_frame_time_ms:Number.isFinite(latestXRViewData?.frame_time_ms) ? Number(latestXRViewData.frame_time_ms) : null
+  };
+}
+
+function renderCaptureDetails(){
+  if(!el.captureDetails) return;
+
+  if(!captures.length){
+    el.captureDetails.innerHTML='<div class="emptyDetail">No camera views captured yet.</div>';
+    return;
+  }
+
+  el.captureDetails.innerHTML='';
+
+  captures.forEach((capture,i)=>{
+    const meta=capture.metadata || capture;
+    const p=meta.camera?.position;
+    const yaw=meta.camera?.yaw_deg;
+
+    const card=document.createElement('div');
+    card.className='captureDetailCard';
+    card.innerHTML=`
+      <strong>View ${i+1}</strong>
+      <span>
+        ${p ? `Camera X ${p.x.toFixed(3)} · Y ${p.y.toFixed(3)} · Z ${p.z.toFixed(3)} m` : 'Camera pose unavailable'}
+        ${Number.isFinite(yaw) ? `<br>Direction ${yaw.toFixed(1)}°` : ''}
+      </span>
+    `;
+    el.captureDetails.appendChild(card);
+  });
+}
+
+function drawResult(points = finishedCorners.length ? finishedCorners : corners){
+  if(!points || points.length < 3) return;
+
+  el.result.classList.add('show');
+  if(el.introCard) el.introCard.style.display='none';
+
+  const detailsPanel=document.getElementById('detailsPanel');
+  if(detailsPanel) detailsPanel.open=false;
+
+  el.cornerMetric.textContent=points.length;
+  el.areaMetric.textContent=areaXZ(points).toFixed(2)+' m²';
+
+  scanSceneData=buildSceneData(points);
+  renderCornerDetails();
+  renderScreenshotPoseDetails();
+  renderCaptureDetails();
+
+  const xs=points.map(p=>p.x), zs=points.map(p=>p.z);
+  const minX=Math.min(...xs),maxX=Math.max(...xs);
+  const minZ=Math.min(...zs),maxZ=Math.max(...zs);
+  const w=Math.max(.001,maxX-minX),h=Math.max(.001,maxZ-minZ);
+  const k=Math.min(455/w,385/h);
+  const cx=250,cy=215;
+  const worldCenterX=(minX+maxX)/2;
+  const worldCenterZ=(minZ+maxZ)/2;
+
+  planTransform={
+    k,
+    cx,
+    cy,
+    worldCenterX,
+    worldCenterZ
+  };
+
+  const mapped=points.map(p=>({
+    x:(p.x-worldCenterX)*k+cx,
+    y:(p.z-worldCenterZ)*k+cy
+  }));
+
+  el.plan.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+
+  const poly=document.createElementNS(ns,'polygon');
+  poly.setAttribute('points',mapped.map(p=>`${p.x},${p.y}`).join(' '));
+  poly.setAttribute('fill','#18181d');
+  poly.setAttribute('stroke','#fff');
+  poly.setAttribute('stroke-width','4');
+  poly.setAttribute('stroke-linejoin','round');
+  el.plan.appendChild(poly);
+
+  mapped.forEach((p,i)=>{
+    const c=document.createElementNS(ns,'circle');
+    c.setAttribute('cx',p.x);
+    c.setAttribute('cy',p.y);
+    c.setAttribute('r','11');
+    c.setAttribute('fill',i===0?'#6b5cff':'#0d0d10');
+    c.setAttribute('stroke','#fff');
+    c.setAttribute('stroke-width','3');
+    el.plan.appendChild(c);
+
+    const n=document.createElementNS(ns,'text');
+    n.setAttribute('x',p.x);
+    n.setAttribute('y',p.y+.5);
+    n.setAttribute('class','planCornerNumber');
+    n.textContent=String(i+1);
+    el.plan.appendChild(n);
+  });
+
+  mapped.forEach((p,i)=>{
+    const q=mapped[(i+1)%mapped.length];
+    const mx=(p.x+q.x)/2;
+    const my=(p.y+q.y)/2;
+    let angle=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI;
+    if(angle>90 || angle<-90) angle+=180;
+
+    const label=document.createElementNS(ns,'text');
+    label.setAttribute('x',mx);
+    label.setAttribute('y',my-8);
+    label.setAttribute('class','planWallLabel');
+    label.setAttribute('transform',`rotate(${angle.toFixed(2)} ${mx.toFixed(2)} ${(my-8).toFixed(2)})`);
+    label.textContent=`Wall ${i+1}`;
+    el.plan.appendChild(label);
+  });
+
+  // Live phone position + direction marker.
+  phonePoseGroup=document.createElementNS(ns,'g');
+  phonePoseGroup.setAttribute('class','phonePoseMarker');
+  phonePoseGroup.setAttribute('aria-label','Current phone position and direction');
+
+  const halo=document.createElementNS(ns,'circle');
+  halo.setAttribute('class','phoneHalo');
+  halo.setAttribute('cx','0');
+  halo.setAttribute('cy','0');
+  halo.setAttribute('r','18');
+  phonePoseGroup.appendChild(halo);
+
+  const arrow=document.createElementNS(ns,'path');
+  arrow.setAttribute('class','phoneArrow');
+  arrow.setAttribute('d','M 0 -30 L 8 -14 L -8 -14 Z');
+  phonePoseGroup.appendChild(arrow);
+
+  const dot=document.createElementNS(ns,'circle');
+  dot.setAttribute('class','phoneDot');
+  dot.setAttribute('cx','0');
+  dot.setAttribute('cy','0');
+  dot.setAttribute('r','8');
+  phonePoseGroup.appendChild(dot);
+
+  const label=document.createElementNS(ns,'text');
+  label.setAttribute('class','phoneLabel');
+  label.setAttribute('x','14');
+  label.setAttribute('y','4');
+  label.textContent='Phone';
+  phonePoseGroup.appendChild(label);
+
+  phonePoseGroup.style.display='none';
+  el.plan.appendChild(phonePoseGroup);
+
+  el.walls.innerHTML='';
+  points.forEach((p,i)=>{
+    const q=points[(i+1)%points.length];
+    const item=document.createElement('div');
+    item.className='wall';
+    item.innerHTML=`<small>Wall ${i+1}</small><b>${distanceXZ(p,q).toFixed(2)} m</b>`;
+    el.walls.appendChild(item);
+  });
+
+  updatePhonePoseMarker();
+  renderFurniture();
+}
+
+function updatePhonePoseMarker(){
+  if(!phonePoseGroup || !planTransform || !latestViewerPosition || !latestViewerOrientation){
+    return;
+  }
+
+  const {k,cx,cy,worldCenterX,worldCenterZ}=planTransform;
+
+  const px=(latestViewerPosition.x-worldCenterX)*k+cx;
+  const py=(latestViewerPosition.z-worldCenterZ)*k+cy;
+
+  // WebXR camera forward is local -Z. Convert it into world space.
+  const forward=new THREE.Vector3(0,0,-1)
+    .applyQuaternion(latestViewerOrientation)
+    .normalize();
+
+  // Our SVG uses +X right and +Z downward.
+  // Marker artwork points upward at 0deg.
+  const angle=Math.atan2(forward.x,-forward.z)*180/Math.PI;
+
+  phonePoseGroup.setAttribute(
+    'transform',
+    `translate(${px.toFixed(2)} ${py.toFixed(2)}) rotate(${angle.toFixed(2)})`
+  );
+  phonePoseGroup.style.display='';
+
+  // Keep the text readable instead of rotating with the arrow.
+  const label=phonePoseGroup.querySelector('.phoneLabel');
+  if(label){
+    label.setAttribute(
+      'transform',
+      `rotate(${-angle.toFixed(2)} 14 4)`
+    );
+  }
+}
+
+
+document.addEventListener('pointerup',e=>{
+  if(!document.body.classList.contains('xr-active')) return;
+  if(document.body.classList.contains('layout-mode')) return;
+  if(document.body.classList.contains('screenshot-mode')) return;
+  if(e.target.closest && e.target.closest('#hud button')) return;
+  // Fallback for HelloXR builds that expose DOM pointer events rather than XR select.
+  placeCurrentHit();
+});
+
+
+
+function getPlanPositionFromWorld(worldPosition){
+  if(!worldPosition || !scanSceneData?.corners || scanSceneData.corners.length<2){
+    return null;
+  }
+
+  const c1=scanSceneData.corners[0];
+  const c2=scanSceneData.corners[1];
+  const dx=c2.world.x-c1.world.x;
+  const dz=c2.world.z-c1.world.z;
+  const len=Math.hypot(dx,dz);
+
+  if(len<0.0001) return null;
+
+  const ex={x:dx/len,z:dz/len};
+  const ez={x:-ex.z,z:ex.x};
+  const rx=worldPosition.x-c1.world.x;
+  const rz=worldPosition.z-c1.world.z;
+
+  return {
+    x:rx*ex.x+rz*ex.z,
+    z:rx*ez.x+rz*ez.z
+  };
+}
+
+function saveScreenshotPose(){
+  const camera=getCurrentCameraMetadata();
+
+  savedScreenshotPose={
+    saved_at:new Date().toISOString(),
+    capture_mode:'manual_os_screenshot_pose',
+    timing_note:'Pose is saved by the web app; the physical iPhone screenshot occurs separately.',
+    camera,
+    xr_view:cloneData(latestXRViewData),
+    image:getCaptureImageGeometry(),
+    plan_position:camera?.position ? getPlanPositionFromWorld(camera.position) : null,
+    furniture:getFurnitureSceneData()
+  };
+
+  renderScreenshotPoseDetails();
+
+  if(el.screenshotPoseStatus){
+    el.screenshotPoseStatus.textContent=camera ? 'Pose saved · manual screenshot' : 'Pose unavailable';
+  }
+}
+
+function renderScreenshotPoseDetails(){
+  if(!el.screenshotPoseDetails) return;
+
+  if(!savedScreenshotPose){
+    el.screenshotPoseDetails.innerHTML='<div class="emptyDetail">No screenshot pose saved yet.</div>';
+    return;
+  }
+
+  const p=savedScreenshotPose.camera?.position;
+  const plan=savedScreenshotPose.plan_position;
+  const yaw=savedScreenshotPose.camera?.yaw_deg;
+
+  el.screenshotPoseDetails.innerHTML=`
+    <div class="captureDetailCard">
+      <strong>Latest manual screenshot pose</strong>
+      <span>
+        ${p ? `Camera X ${p.x.toFixed(3)} · Y ${p.y.toFixed(3)} · Z ${p.z.toFixed(3)} m` : 'Camera pose unavailable'}
+        ${plan ? `<br>Plan X ${plan.x.toFixed(3)} · Z ${plan.z.toFixed(3)} m` : ''}
+        ${Number.isFinite(yaw) ? `<br>Direction ${yaw.toFixed(1)}°` : ''}
+      </span>
+    </div>
+  `;
+}
+
+function enterScreenshotMode(){
+  if(!session || !completed){
+    alert('Live AR tracking is not active. Finish the room scan first.');
+    return;
+  }
+
+  screenshotModeActive=true;
+  saveScreenshotPose();
+
+  document.body.classList.remove('layout-mode');
+  document.body.classList.remove('photo-mode');
+  document.body.classList.add('screenshot-mode');
+
+  el.hud.classList.remove('active');
+  el.photoHud?.classList.remove('active');
+  el.screenshotHud.classList.add('active');
+  el.screenshotHud.setAttribute('aria-hidden','false');
+
+  if(renderer?.domElement){
+    renderer.domElement.style.display='block';
+  }
+}
+
+function exitScreenshotMode(){
+  screenshotModeActive=false;
+  saveScreenshotPose();
+
+  document.body.classList.remove('screenshot-mode');
+  document.body.classList.add('layout-mode');
+
+  el.screenshotHud.classList.remove('active');
+  el.screenshotHud.setAttribute('aria-hidden','true');
+
+  requestAnimationFrame(()=>{
+    el.result.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+}
+
+el.screenshotMode?.addEventListener('click',enterScreenshotMode);
+el.backFromScreenshot?.addEventListener('click',exitScreenshotMode);
+
+function enterPhotoMode(){
+  if(!session || !completed){
+    alert('Live AR tracking is not active. Re-scan the room before using camera view.');
+    return;
+  }
+
+  photoMode=true;
+  document.body.classList.remove('layout-mode');
+  document.body.classList.add('photo-mode');
+  el.hud.classList.remove('active');
+  el.photoHud.classList.add('active');
+  el.photoHud.setAttribute('aria-hidden','false');
+
+  if(renderer?.domElement){
+    renderer.domElement.style.display='block';
+  }
+}
+
+function exitPhotoMode(){
+  photoMode=false;
+  document.body.classList.remove('photo-mode');
+  document.body.classList.add('layout-mode');
+  el.photoHud.classList.remove('active');
+  el.photoHud.setAttribute('aria-hidden','true');
+
+  requestAnimationFrame(()=>{
+    el.result.scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+  });
+}
+
+function captureCanvasLayer(ctx,source,targetWidth,targetHeight){
+  if(!source || !source.width || !source.height) return false;
+
+  const rect=source.getBoundingClientRect();
+  if(rect.width<=0 || rect.height<=0) return false;
+
+  const sx=targetWidth/window.innerWidth;
+  const sy=targetHeight/window.innerHeight;
+
+  try{
+    ctx.drawImage(
+      source,
+      0,0,source.width,source.height,
+      rect.left*sx,
+      rect.top*sy,
+      rect.width*sx,
+      rect.height*sy
+    );
+    return true;
+  }catch(err){
+    console.warn('Could not composite canvas layer',err);
+    return false;
+  }
+}
+
+async function captureARComposite(){
+  if(!photoMode || !renderer) return;
+
+  const flash=document.createElement('div');
+  flash.className='captureFlash';
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),260);
+
+  // Lock camera pose + projection to the same fresh XR frame used for capture.
+  const frameSnapshot=await waitForNextXRFrameSnapshot();
+
+  const dpr=Math.min(window.devicePixelRatio || 1,2);
+  const width=Math.max(1,Math.round(window.innerWidth*dpr));
+  const height=Math.max(1,Math.round(window.innerHeight*dpr));
+
+  const output=document.createElement('canvas');
+  output.width=width;
+  output.height=height;
+
+  const ctx=output.getContext('2d',{
+    alpha:false
+  });
+
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,width,height);
+
+  let layersDrawn=0;
+
+  // HelloXR inserts its AR camera renderer into the page. Draw it first.
+  const bgCandidates=[
+    ...document.querySelectorAll('.arkit-device-wrapper canvas')
+  ];
+
+  bgCandidates.forEach(canvas=>{
+    if(canvas!==renderer.domElement){
+      if(captureCanvasLayer(ctx,canvas,width,height)) layersDrawn++;
+    }
+  });
+
+  // Fallback: collect any other visible canvases before our Three.js overlay.
+  if(!bgCandidates.length){
+    [...document.querySelectorAll('canvas')].forEach(canvas=>{
+      if(canvas!==renderer.domElement){
+        if(captureCanvasLayer(ctx,canvas,width,height)) layersDrawn++;
+      }
+    });
+  }
+
+  // Draw EventVision AR lines, numbered corners, etc. last.
+  if(captureCanvasLayer(ctx,renderer.domElement,width,height)){
+    layersDrawn++;
+  }
+
+  const blob=await new Promise(resolve=>{
+    output.toBlob(resolve,'image/jpeg',0.94);
+  });
+
+  if(!blob){
+    alert('Could not create the captured image.');
+    return;
+  }
+
+  const metadata={
+    id:`view_${String(captures.length+1).padStart(2,'0')}`,
+    created_at:new Date().toISOString(),
+    capture_mode:'xr_frame_locked_composite',
+    camera:frameSnapshot?.camera || getCurrentCameraMetadata(),
+    xr_view:frameSnapshot?.xr_view || cloneData(latestXRViewData),
+    image:getCaptureImageGeometry(width,height),
+    room:scanSceneData,
+    furniture:getFurnitureSceneData(),
+    composite_layers:layersDrawn
+  };
+
+  activeCapture={
+    blob,
+    metadata
+  };
+
+  if(activeCaptureURL){
+    URL.revokeObjectURL(activeCaptureURL);
+  }
+  activeCaptureURL=URL.createObjectURL(blob);
+  el.photoPreviewImage.src=activeCaptureURL;
+
+  const p=metadata.camera?.position;
+  const yaw=metadata.camera?.yaw_deg;
+
+  const imageMeta=metadata.image;
+  const projectionSaved=Array.isArray(metadata.camera?.projection_matrix);
+
+  el.photoCaptureMeta.innerHTML=
+    `${p ? `Camera: X ${p.x.toFixed(3)} · Y ${p.y.toFixed(3)} · Z ${p.z.toFixed(3)} m` : 'Camera pose unavailable'}`
+    + `${Number.isFinite(yaw) ? `<br>Direction: ${yaw.toFixed(1)}°` : ''}`
+    + `${imageMeta ? `<br>Image: ${imageMeta.output_width_px} × ${imageMeta.output_height_px} px` : ''}`
+    + `<br>Projection matrix: ${projectionSaved ? 'saved ✓' : 'unavailable'}`
+    + `<br>Composite layers captured: ${layersDrawn}`;
+
+  el.photoPreviewModal.classList.add('open');
+  el.photoPreviewModal.setAttribute('aria-hidden','false');
+}
+
+function closePhotoPreview(){
+  el.photoPreviewModal.classList.remove('open');
+  el.photoPreviewModal.setAttribute('aria-hidden','true');
+}
+
+function keepActiveCapture(){
+  if(!activeCapture) return;
+
+  captures.push(activeCapture);
+  activeCapture=null;
+
+  renderCaptureDetails();
+  closePhotoPreview();
+  exitPhotoMode();
+}
+
+async function shareActiveCapture(){
+  if(!activeCapture) return;
+
+  const filename=`eventvision-view-${String(captures.length+1).padStart(2,'0')}.jpg`;
+  const file=new File([activeCapture.blob],filename,{type:'image/jpeg'});
+
+  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+    try{
+      await navigator.share({
+        files:[file],
+        title:'EventVision AR view'
+      });
+      return;
+    }catch(err){
+      if(err?.name==='AbortError') return;
+      console.warn('Share failed, falling back to download',err);
+    }
+  }
+
+  const a=document.createElement('a');
+  a.href=activeCaptureURL;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function buildSceneExportData(){
+  return {
+    protocol_version:'EventVision_v8_2',
+    exported_at:new Date().toISOString(),
+    room:scanSceneData,
+    furniture:getFurnitureSceneData(),
+    latest_screenshot_pose:cloneData(savedScreenshotPose),
+    captured_views:captures.map(capture=>cloneData(capture.metadata || capture))
+  };
+}
+
+function exportSceneJSON(){
+  const data=buildSceneExportData();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`eventvision-scene-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+el.exportData?.addEventListener('click',exportSceneJSON);
+
+el.cameraView?.addEventListener('click',enterPhotoMode);
+el.backToPlan?.addEventListener('click',exitPhotoMode);
+el.capturePhoto?.addEventListener('click',captureARComposite);
+el.closePhotoPreview?.addEventListener('click',closePhotoPreview);
+el.keepPhoto?.addEventListener('click',keepActiveCapture);
+el.sharePhoto?.addEventListener('click',shareActiveCapture);
+
+function endAR(){
+  renderer?.setAnimationLoop(null);
+  el.hud.classList.remove('active');
+  document.body.classList.remove('xr-active');
+  document.body.classList.remove('layout-mode');
+  document.body.classList.remove('photo-mode');
+  document.body.classList.remove('screenshot-mode');
+  photoMode=false;
+  screenshotModeActive=false;
+  el.photoHud?.classList.remove('active');
+  el.screenshotHud?.classList.remove('active');
+
+  if(renderer?.domElement) renderer.domElement.style.display='none';
+
+  session=null;
+  hitSource=null;
+
+  if(completed && finishedCorners.length>=3){
+    drawResult(finishedCorners);
+
+    if(phonePoseGroup){
+      phonePoseGroup.classList.add('paused');
+    }
+    if(el.trackingBadge){
+      el.trackingBadge.classList.add('paused');
+    }
+    if(el.trackingText){
+      el.trackingText.textContent='Tracking paused';
+    }
+
+    requestAnimationFrame(()=>{
+      el.result.scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+    });
+  }
+}
+
+
+function openFurniturePicker(){
+  selectedFurnitureType=null;
+  el.furnitureGrid.querySelectorAll('.furnitureType').forEach(btn=>btn.classList.remove('selected'));
+  el.confirmFurniture.disabled=true;
+  el.confirmFurniture.textContent='Choose furniture type';
+  el.furnitureModal.classList.add('open');
+  el.furnitureModal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+
+function closeFurniturePicker(){
+  el.furnitureModal.classList.remove('open');
+  el.furnitureModal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+}
+
+el.addFurniture.addEventListener('click',openFurniturePicker);
+el.closeFurniture.addEventListener('click',closeFurniturePicker);
+
+el.furnitureModal.addEventListener('click',e=>{
+  if(e.target===el.furnitureModal) closeFurniturePicker();
+});
+
+el.furnitureGrid.addEventListener('click',e=>{
+  const btn=e.target.closest('.furnitureType');
+  if(!btn) return;
+  el.furnitureGrid.querySelectorAll('.furnitureType').forEach(item=>item.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedFurnitureType=btn.dataset.type;
+  el.confirmFurniture.disabled=false;
+  el.confirmFurniture.textContent=`Continue with ${selectedFurnitureType}`;
+});
+
+function normalizeFurnitureType(text){
+  const value=String(text || '').trim().toLowerCase();
+  if(value.includes('chair')) return 'chair';
+  if(value.includes('table')) return 'table';
+  if(value.includes('lounge')) return 'lounge';
+  if(value.includes('bar')) return 'bar';
+  if(value.includes('stage') || value.includes('dj')) return 'stage';
+  if(value.includes('decor')) return 'decoration';
+  if(value.includes('light')) return 'lighting';
+  if(value.includes('plant')) return 'plant';
+  return null;
+}
+
+el.confirmFurniture.addEventListener('click',()=>{
+  if(!selectedFurnitureType) return;
+
+  const normalizedType = normalizeFurnitureType(selectedFurnitureType) || 'chair';
+  addFurniture(normalizedType);
+
+  closeFurniturePicker();
+  el.addFurniture.innerHTML='<span class="addFurnitureIcon">＋</span><span>Add furniture</span>';
+  selectedFurnitureType=null;
+});
+
+
+el.scanAgain.addEventListener('click',()=>{
+  completed=false;
+  corners=[];
+  finishedCorners=[];
+  floorY=null;
+  planTransform=null;
+  phonePoseGroup=null;
+  scanSceneData=null;
+  captures=[];
+  savedScreenshotPose=null;
+  latestXRViewData=null;
+  pendingXRFrameResolvers=[];
+  activeCapture=null;
+  renderScreenshotPoseDetails();
+  renderCaptureDetails();
+
+  clearObjects();
+  el.result.classList.remove('show');
+  closeFurniturePicker();
+
+  selectedFurnitureType=null;
+  el.addFurniture.innerHTML='<span class="addFurnitureIcon">＋</span><span>Add furniture</span>';
+
+  if(session){
+    // Return directly to tracing while preserving the same XR world origin.
+    document.body.classList.remove('layout-mode');
+    document.body.classList.remove('screenshot-mode');
+    el.screenshotHud?.classList.remove('active');
+    el.hud.classList.add('active');
+    reticle.visible=false;
+    updateControls();
+    el.hint.textContent='Finding floor — move slowly';
+  }else{
+    if(el.introCard) el.introCard.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+});
+
+el.start.addEventListener('click',()=>{
+  if(renderer?.domElement) renderer.domElement.style.display='block';
+  enterAR();
+});
+
+window.addEventListener('resize',()=>{
+  if(renderer){
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  }
+
+  if(completed && planTransform){
+    renderFurniture();
+  }
+});
+
+check();
+
+// ===== EventVision v6 furniture layout editor =====
+const furnitureLayer = document.getElementById('furnitureLayer');
+const planEditor = document.getElementById('planEditor');
+const furnitureToolbar = document.getElementById('furnitureToolbar');
+const selectedFurnitureLabel = document.getElementById('selectedFurnitureLabel');
+const rotateLeftBtn = document.getElementById('rotateLeft');
+const rotateRightBtn = document.getElementById('rotateRight');
+const deleteFurnitureBtn = document.getElementById('deleteFurniture');
+const furnitureCountEl = document.getElementById('furnitureCount');
+
+let furnitureItems = [];
+let selectedFurnitureId = null;
+let furnitureIdCounter = 1;
+
+function getFurnitureItem(id){
+  return furnitureItems.find(item => item.id === id) || null;
+}
+
+function setSelectedFurniture(id){
+  selectedFurnitureId = id;
+
+  if(furnitureLayer){
+    furnitureLayer.querySelectorAll('.furnitureItem').forEach(node => {
+      node.classList.toggle('selected', node.dataset.id === String(id));
+    });
+  }
+
+  const item = getFurnitureItem(id);
+
+  if(item && furnitureToolbar){
+    furnitureToolbar.classList.add('visible');
+    const typeLabel=item.type.charAt(0).toUpperCase()+item.type.slice(1);
+    selectedFurnitureLabel.textContent = item.type==='chair'
+      ? `${typeLabel} · 55 × 55 cm`
+      : `${typeLabel} selected`;
+  } else if(furnitureToolbar){
+    furnitureToolbar.classList.remove('visible');
+  }
+}
+
+function updateFurnitureCount(){
+  if(!furnitureCountEl) return;
+
+  const count = furnitureItems.length;
+  furnitureCountEl.textContent = count
+    ? `${count} furniture item${count === 1 ? '' : 's'} on plan`
+    : '';
+}
+
+function clamp01(v){
+  return Math.max(0.01, Math.min(0.99, v));
+}
+
+const FURNITURE_DIMENSIONS_M={
+  // Height is an editable default. Replace with the real furniture-model height when known.
+  chair:{width:0.55,depth:0.55,height:0.85}
+};
+
+function getFurnitureDimensions(item){
+  const preset=FURNITURE_DIMENSIONS_M[item.type];
+  if(preset) return preset;
+
+  return {
+    width:item.width_m || null,
+    depth:item.depth_m || null,
+    height:item.height_m || null
+  };
+}
+
+function getFurnitureWorldPosition(item){
+  if(!item || !planTransform || !el.plan) return null;
+
+  const vb=el.plan.viewBox?.baseVal;
+  if(!vb?.width || !vb?.height) return null;
+
+  const svgX=vb.x + item.x*vb.width;
+  const svgY=vb.y + item.y*vb.height;
+
+  return {
+    x:(svgX-planTransform.cx)/planTransform.k + planTransform.worldCenterX,
+    y:Number.isFinite(floorY) ? Number(floorY) : Number(scanSceneData?.corners?.[0]?.world?.y || 0),
+    z:(svgY-planTransform.cy)/planTransform.k + planTransform.worldCenterZ
+  };
+}
+
+function getFurnitureSceneData(){
+  return furnitureItems.map(item=>{
+    const dims=getFurnitureDimensions(item);
+    const world=getFurnitureWorldPosition(item);
+    const plan=world ? getPlanPositionFromWorld(world) : null;
+
+    return {
+      id:`${item.type}_${String(item.id).padStart(2,'0')}`,
+      source_id:item.id,
+      type:item.type,
+      plan_position:plan ? {x:Number(plan.x),z:Number(plan.z)} : null,
+      world_position:world ? {x:Number(world.x),y:Number(world.y),z:Number(world.z)} : null,
+      rotation_plan_deg:Number(item.rotation),
+      rotation_convention:'clockwise_on_plan_from_default_icon_orientation',
+      dimensions_m:{
+        width:dims.width == null ? null : Number(dims.width),
+        depth:dims.depth == null ? null : Number(dims.depth),
+        height:dims.height == null ? null : Number(dims.height)
+      },
+      ui_normalized:{x:Number(item.x),y:Number(item.y)}
+    };
+  });
+}
+
+function getPlanScreenScale(){
+  if(!planTransform || !el.plan) return null;
+
+  const rect=el.plan.getBoundingClientRect();
+  const vb=el.plan.viewBox?.baseVal;
+
+  if(!rect.width || !rect.height || !vb?.width || !vb?.height) return null;
+
+  return {
+    pxPerMeterX:planTransform.k*(rect.width/vb.width),
+    pxPerMeterY:planTransform.k*(rect.height/vb.height)
+  };
+}
+
+function getFurnitureScreenSize(item){
+  const dims=getFurnitureDimensions(item);
+  const scale=getPlanScreenScale();
+
+  if(!dims.width || !dims.depth || !scale){
+    return {width:44,height:44,physical:false};
+  }
+
+  return {
+    width:Math.max(5,dims.width*scale.pxPerMeterX),
+    height:Math.max(5,dims.depth*scale.pxPerMeterY),
+    physical:true
+  };
+}
+
+function makeFurnitureNode(item){
+  const node = document.createElement('div');
+  node.className = 'furnitureItem';
+  node.dataset.id = String(item.id);
+  node.dataset.type = item.type;
+  node.setAttribute('role','button');
+  node.setAttribute('aria-label',`${item.type} furniture item`);
+  node.tabIndex = 0;
+
+  const hitArea=document.createElement('div');
+  hitArea.className='furnitureHitArea';
+  node.appendChild(hitArea);
+
+  const visual = document.createElement('div');
+  visual.className = `furnitureVisual ${item.type}`;
+  node.appendChild(visual);
+
+  function paint(){
+    const size=getFurnitureScreenSize(item);
+
+    node.style.width=`${size.width.toFixed(2)}px`;
+    node.style.height=`${size.height.toFixed(2)}px`;
+    node.style.left = `${item.x * 100}%`;
+    node.style.top = `${item.y * 100}%`;
+    node.style.transform = `translate(-50%,-50%) rotate(${item.rotation}deg)`;
+
+    node.dataset.scaleMode=size.physical?'physical':'icon';
+  }
+
+  let dragging = false;
+
+  node.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragging = true;
+    setSelectedFurniture(item.id);
+    node.setPointerCapture?.(e.pointerId);
+  });
+
+  node.addEventListener('pointermove', e => {
+    if(!dragging || !planEditor) return;
+
+    const rect = planEditor.getBoundingClientRect();
+    if(!rect.width || !rect.height) return;
+
+    const size=getFurnitureScreenSize(item);
+    const halfX=Math.min(0.49,(size.width/2)/rect.width);
+    const halfY=Math.min(0.49,(size.height/2)/rect.height);
+
+    item.x = Math.max(halfX,Math.min(1-halfX,(e.clientX-rect.left)/rect.width));
+    item.y = Math.max(halfY,Math.min(1-halfY,(e.clientY-rect.top)/rect.height));
+
+    paint();
+  });
+
+  const finishDrag = e => {
+    dragging = false;
+    try { node.releasePointerCapture?.(e.pointerId); } catch (_) {}
+  };
+
+  node.addEventListener('pointerup', finishDrag);
+  node.addEventListener('pointercancel', finishDrag);
+
+  node.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedFurniture(item.id);
+  });
+
+  node.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      setSelectedFurniture(item.id);
+    }
+
+    // Accessible non-drag alternative: arrow keys move selected item.
+    const step = e.shiftKey ? 0.03 : 0.01;
+    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
+      e.preventDefault();
+      if(e.key === 'ArrowLeft') item.x = clamp01(item.x - step);
+      if(e.key === 'ArrowRight') item.x = clamp01(item.x + step);
+      if(e.key === 'ArrowUp') item.y = clamp01(item.y - step);
+      if(e.key === 'ArrowDown') item.y = clamp01(item.y + step);
+      paint();
+    }
+  });
+
+  paint();
+  return node;
+}
+
+function renderFurniture(){
+  if(!furnitureLayer) return;
+
+  furnitureLayer.innerHTML = '';
+
+  furnitureItems.forEach(item => {
+    const node = makeFurnitureNode(item);
+    furnitureLayer.appendChild(node);
+  });
+
+  setSelectedFurniture(selectedFurnitureId);
+  updateFurnitureCount();
+}
+
+function addFurniture(type='chair'){
+  if(!furnitureLayer) return;
+
+  const preset=FURNITURE_DIMENSIONS_M[type] || null;
+
+  const item = {
+    id: furnitureIdCounter++,
+    type,
+    x: 0.5,
+    y: 0.5,
+    rotation: 0,
+    width_m:preset?.width || null,
+    depth_m:preset?.depth || null,
+    height_m:preset?.height || null
+  };
+
+  // Offset subsequent chairs slightly so multiple adds do not perfectly overlap.
+  const sameTypeCount = furnitureItems.filter(x => x.type === type).length;
+  if(sameTypeCount){
+    const offset = Math.min(0.18, sameTypeCount * 0.035);
+    item.x = clamp01(0.5 + offset);
+    item.y = clamp01(0.5 + offset);
+  }
+
+  furnitureItems.push(item);
+  selectedFurnitureId = item.id;
+  renderFurniture();
+}
+
+function rotateSelected(delta){
+  const item = getFurnitureItem(selectedFurnitureId);
+  if(!item) return;
+
+  item.rotation = (item.rotation + delta + 360) % 360;
+  renderFurniture();
+}
+
+function deleteSelectedFurniture(){
+  if(selectedFurnitureId == null) return;
+
+  furnitureItems = furnitureItems.filter(item => item.id !== selectedFurnitureId);
+  selectedFurnitureId = furnitureItems.length
+    ? furnitureItems[furnitureItems.length - 1].id
+    : null;
+
+  renderFurniture();
+}
+
+rotateLeftBtn?.addEventListener('click', () => rotateSelected(-15));
+rotateRightBtn?.addEventListener('click', () => rotateSelected(15));
+deleteFurnitureBtn?.addEventListener('click', deleteSelectedFurniture);
+
+planEditor?.addEventListener('pointerdown', e => {
+  if(e.target === planEditor || e.target?.id === 'plan' || e.target?.id === 'furnitureLayer'){
+    setSelectedFurniture(null);
+  }
+});
+
+// Reset furniture when a completely new room scan is started.
+const originalScanAgain = document.getElementById('scanAgain');
+originalScanAgain?.addEventListener('click', () => {
+  furnitureItems = [];
+  selectedFurnitureId = null;
+  selectedFurnitureType = null;
+  renderFurniture();
+});
+
+</script>
+</body>
+</html>
